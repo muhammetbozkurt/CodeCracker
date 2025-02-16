@@ -53,7 +53,7 @@
         <!-- Guess Input Section -->
         <div id="guessSection">
             <input type="number" id="guess" placeholder="Enter your guess">
-            <button onclick="submitGuess()">Submit Guess</button>
+            <button onclick="submitGuess()" id="guessButton">Submit Guess</button>
         </div>
 
         <!-- Turn History Section -->
@@ -109,56 +109,39 @@
         socket.on('guess_turn', (data) => {
             // document.getElementById('guessSection').style.display = 'block';
             // when it's the user's turn to guess activate the guess section
-            document.getElementById('guess').readOnly = false;
-            history = data.history;
-            console.log(data);
-            console.log("----");
-            console.log(JSON.stringify(data));
-            console.log("----");
-            console.log("guess_turn");
-            const historyList = document.getElementById('history');
-            historyList.innerHTML = history.map(entry => `
-                <li>${entry.username} guessed ${entry.guess} - ${entry.result}</li>
-            `).join('');
+            document.getElementById('guess').disabled = false;
+            document.getElementById('guessButton').disabled = false;
         });
 
         socket.on('guess_submitted', (data) => {
             // when the user submits a guess, disable the guess input
             // document.getElementById('guess').disabled = true;
-            document.getElementById('guess').readOnly = true;
-            history = data.history;
-            console.log(data);
-            console.log("----");
-            console.log(JSON.stringify(data));
-            console.log("----");
-            console.log("guess_submitted");
-            const historyList = document.getElementById('history');
-            // historyList.innerHTML = history.map(entry => `
-            //     <li>${entry.username} guessed ${entry.guess} - ${entry.result}</li>
-            // `).join('');
-            historyList.innerHTML = '';
-            for (let i = 0; i < history.length; i++) {
-                const entry = history[i];
-                const li = document.createElement('li');
-                li.textContent = `${entry.username} guessed ${entry.guess} - ${entry.result}`;
-                historyList.appendChild(li);
-            }
+            document.getElementById('guess').disabled = true;
+            document.getElementById('guessButton').disabled = true;
+
         });
 
         socket.on('update_history', (history) => {
             const historyList = document.getElementById('history');
             historyList.innerHTML = history.map(entry => `
-                <li>${entry.username} guessed ${entry.guess} - ${entry.result}</li>
+                <li>${entry.player} guessed ${entry.guess} - ${entry.result}</li>
             `).join('');
         });
 
         socket.on('game_over', (winner) => {
-            alert(`Game Over! ${winner} wins!`);
+            alert(`Game Over! ${JSON.stringify(winner)} wins!`);
         });
 
         // Listen for errors
         socket.on('error', (message) => {
             alert(JSON.stringify(message));
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            if (gameId && username) {
+                socket.emit('reconnect_player', { gameId, username });
+            }
         });
         
     </script>

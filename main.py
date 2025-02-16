@@ -164,20 +164,23 @@ async def submit_guess(sid, data):
             "gameId": game_id,
             "winner": winner.name
         }, room=game_id)  # Emit to the game room
-    print("Emitting guess results")
+
+    await sio.emit("guess_submitted", {
+        "gameId": game_id,
+        "username": username,
+        "guess": guess,
+    }, room=sid)
     # Notify the opponent that it's their turn
     await sio.emit("guess_turn", {
         "gameId": game_id,
         "username": opponent.name,
-        "history": game.turn_history
     }, room=opponent.sid)  # Emit to the opponent's socket ID
-    print("Emitting guess results")
     # Broadcast the updated history to both players
     await sio.emit("update_history",  game.turn_history
     , room=game_id)  # Emit to the game room
-    print(sid, game.player1.sid, game.player2.sid)
     print(sid == game.player1.sid, sid == game.player2.sid)
     print("Guess results emitted")
+
 
 
 @sio.event
