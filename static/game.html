@@ -1,0 +1,166 @@
+<!-- static/game.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game - Game Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        .history {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history li {
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        .readonly {
+            background-color: #b8b8b8;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guessing Game</h1>
+        <p>Game ID: <span id="gameId"></span></p>
+        <p>Username: <span id="username"></span></p>
+
+        <!-- Secret Input Section -->
+        <div id="secretSection">
+            <input type="number" id="secret" placeholder="Enter your secret number">
+            <button onclick="submitSecret()">Submit Secret</button>
+        </div>
+
+        <!-- Guess Input Section -->
+        <div id="guessSection">
+            <input type="number" id="guess" placeholder="Enter your guess">
+            <button onclick="submitGuess()">Submit Guess</button>
+        </div>
+
+        <!-- Turn History Section -->
+        <div class="history">
+            <h2>Turn History</h2>
+            <ul id="history"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('gameId');
+        const username = urlParams.get('username');
+
+        document.getElementById('gameId').textContent = gameId;
+        document.getElementById('username').textContent = username;
+
+        const socket = io();
+
+        // Join the game room
+        socket.emit('join_room', { gameId, username });
+
+        // Function to submit the secret number
+        function submitSecret() {
+            const secret = document.getElementById('secret').value.trim();
+            if (!secret) {
+                alert("Please enter a secret number!");
+                return;
+            }
+            socket.emit('submit_secret', { gameId, username, secret });
+        }
+
+        // Function to submit a guess
+        function submitGuess() {
+            const guess = document.getElementById('guess').value.trim();
+            if (!guess) {
+                alert("Please enter a guess!");
+                return;
+            }
+            socket.emit('submit_guess', { gameId, username, guess });
+        }
+
+
+
+        // Listen for secret submission success
+        socket.on('secret_submitted', () => {
+            console.log('Secret submitted successfully');
+            document.getElementById('secret').readOnly = true;
+            document.getElementById('secret').classList.add('readonly');
+        });
+
+        socket.on('guess_turn', (data) => {
+            // document.getElementById('guessSection').style.display = 'block';
+            // when it's the user's turn to guess activate the guess section
+            document.getElementById('guess').readOnly = false;
+            history = data.history;
+            console.log(data);
+            console.log("----");
+            console.log(JSON.stringify(data));
+            console.log("----");
+            console.log("guess_turn");
+            const historyList = document.getElementById('history');
+            historyList.innerHTML = history.map(entry => `
+                <li>${entry.username} guessed ${entry.guess} - ${entry.result}</li>
+            `).join('');
+        });
+
+        socket.on('guess_submitted', (data) => {
+            // when the user submits a guess, disable the guess input
+            // document.getElementById('guess').disabled = true;
+            document.getElementById('guess').readOnly = true;
+            history = data.history;
+            console.log(data);
+            console.log("----");
+            console.log(JSON.stringify(data));
+            console.log("----");
+            console.log("guess_submitted");
+            const historyList = document.getElementById('history');
+            // historyList.innerHTML = history.map(entry => `
+            //     <li>${entry.username} guessed ${entry.guess} - ${entry.result}</li>
+            // `).join('');
+            historyList.innerHTML = '';
+            for (let i = 0; i < history.length; i++) {
+                const entry = history[i];
+                const li = document.createElement('li');
+                li.textContent = `${entry.username} guessed ${entry.guess} - ${entry.result}`;
+                historyList.appendChild(li);
+            }
+        });
+
+        socket.on('update_history', (history) => {
+            const historyList = document.getElementById('history');
+            historyList.innerHTML = history.map(entry => `
+                <li>${entry.username} guessed ${entry.guess} - ${entry.result}</li>
+            `).join('');
+        });
+
+        socket.on('game_over', (winner) => {
+            alert(`Game Over! ${winner} wins!`);
+        });
+
+        // Listen for errors
+        socket.on('error', (message) => {
+            alert(JSON.stringify(message));
+        });
+        
+    </script>
+</body>
+</html>
