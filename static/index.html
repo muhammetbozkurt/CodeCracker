@@ -1,0 +1,83 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game - Main Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        .game-id {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guessing Game</h1>
+        <input type="text" id="username" placeholder="Enter your username">
+        <button onclick="createGame()">Create New Game</button>
+        <p>OR</p>
+        <input type="text" id="gameId" placeholder="Enter Game ID to Join">
+        <button onclick="joinGame()">Join Game</button>
+        <p id="status"></p>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+
+        // Function to create a new game
+        function createGame() {
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                alert("Please enter a username!");
+                return;
+            }
+            socket.emit('create_game', { username });
+        }
+
+        // Function to join an existing game
+        function joinGame() {
+            const username = document.getElementById('username').value.trim();
+            const gameId = document.getElementById('gameId').value.trim();
+
+            if (!username || !gameId) {
+                alert("Please enter a username and game ID!");
+                return;
+            }
+            socket.emit('join_game', { gameId, username });
+        }
+
+        // Listen for game creation success
+        socket.on('game_created', (data) => {
+            console.log(data);
+            window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
+        });
+
+        // Listen for game join success
+        socket.on('game_joined', (data) => {
+            window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
+        });
+
+        // Listen for errors
+        socket.on('error', (message) => {
+            console.log(JSON.stringify(message));
+            document.getElementById('status').textContent = JSON.stringify(message);
+        });
+    </script>
+</body>
+</html>
