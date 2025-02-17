@@ -2,9 +2,6 @@ from abc import ABC, abstractmethod
 from player.player import Player
 from typing import List, Union
 
-class GameState:
-    
-
 class Game(ABC):
     def __init__(self, game_id: int):
         self.game_id: str = game_id

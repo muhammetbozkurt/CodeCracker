@@ -97,35 +97,62 @@
             socket.emit('submit_guess', { gameId, username, guess });
         }
 
+        function secretEnable( state ) {
+            document.getElementById('secret').readOnly = state;
+            document.getElementById('secretButton').disabled = state;
+            if (state) {
+                document.getElementById('secret').classList.add('readonly');
+            } else {
+                document.getElementById('secret').classList.remove('readonly');
+            }
+        }
+
+        function guessEnable( state ) {
+            document.getElementById('guess').readOnly = state;
+            document.getElementById('guessButton').disabled = state;
+            if (state) {
+                document.getElementById('guess').classList.add('readonly');
+            } else {
+                document.getElementById('guess').classList.remove('readonly');
+            }
+        }
+
+        function updateHistory( history ) {
+            const historyList = document.getElementById('history');
+            historyList.innerHTML = history.map(entry => `
+                <li>${entry.player} guessed ${entry.guess} - ${entry.result}</li>
+            `).join('');
+        }
 
 
         // Listen for secret submission success
         socket.on('secret_submitted', () => {
             console.log('Secret submitted successfully');
-            document.getElementById('secret').readOnly = true;
-            document.getElementById('secret').classList.add('readonly');
+            secretEnable(true);
         });
 
         socket.on('guess_turn', (data) => {
             // document.getElementById('guessSection').style.display = 'block';
             // when it's the user's turn to guess activate the guess section
-            document.getElementById('guess').disabled = false;
-            document.getElementById('guessButton').disabled = false;
+            // document.getElementById('guess').disabled = false;
+            // document.getElementById('guessButton').disabled = false;
+            guessEnable(false);
         });
 
         socket.on('guess_submitted', (data) => {
             // when the user submits a guess, disable the guess input
             // document.getElementById('guess').disabled = true;
-            document.getElementById('guess').disabled = true;
-            document.getElementById('guessButton').disabled = true;
-
+            // document.getElementById('guess').disabled = true;
+            // document.getElementById('guessButton').disabled = true;
+            guessEnable(true);
         });
 
         socket.on('update_history', (history) => {
-            const historyList = document.getElementById('history');
-            historyList.innerHTML = history.map(entry => `
-                <li>${entry.player} guessed ${entry.guess} - ${entry.result}</li>
-            `).join('');
+            updateHistory(history);
+            // const historyList = document.getElementById('history');
+            // historyList.innerHTML = history.map(entry => `
+            //     <li>${entry.player} guessed ${entry.guess} - ${entry.result}</li>
+            // `).join('');
         });
 
         socket.on('game_over', (winner) => {
@@ -142,6 +169,32 @@
             if (gameId && username) {
                 socket.emit('reconnect_player', { gameId, username });
             }
+        });
+
+        socket.on('reconnected', (data) => {
+            console.log('Reconnected successfully');
+            const { gameId, username, secret, history, state } = data;
+            /*
+             "state": {
+                "is_game_over": game.state.is_game_over,
+                "is_game_ready": game.state.is_game_ready,
+                "is_game_started": game.state.is_game_started,
+                "is_game_full": game.state.is_game_full,
+                "is_secret_set": game.state.is_secret_set.get(username, False),
+                "who_will_play": game.state.who_will_play
+            }
+            */
+            if (state.is_game_over) {
+                alert('Game Over!');
+            } 
+            if (state.is_secret_set) {
+                secretEnable(true);
+            }
+            if (state.who_will_play !== username) {
+                alert('Your turn to guess!');
+                guessEnable(true);
+            }
+            updateHistory(history);
         });
         
     </script>

@@ -1,13 +1,23 @@
 from games.game import Game
 from player.guess_player import GuessPlayer
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Dict
 from errors.input_error import InputError
+
+class GameState:
+    who_will_play: str = None
+    is_game_over: bool = False
+    is_game_ready: bool = False
+    is_game_started: bool = False
+    is_game_full: bool = False
+    is_secret_set: Dict[str, bool] = {} # {player_uuid: bool}
+
 
 class GuessSecretGame(Game):
     def __init__(self, game_id: str):
         super().__init__(game_id)
         self.turn_history: List[Tuple] = []
         self.players: List[GuessPlayer] = []
+        self.state = GameState()
 
     def add_player(self, player: GuessPlayer):
         if len(self.players) == 2:
@@ -67,7 +77,6 @@ class GuessSecretGame(Game):
         if not GuessSecretGame.is_valid_input(guess):
             raise InputError("Guess must be a 4 digit number and every digit must be different")
 
-        turn_count = len(self.turn_history)
         current_player, secret = self.get_current_player_and_target_secret(username)
 
         if current_player.name != username:

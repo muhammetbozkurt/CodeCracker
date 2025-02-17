@@ -16,6 +16,9 @@ from errors.mutability_error import MutabilityError
 
 # TODO: use GAME class instead of GuessSecretGame when new games are added
 
+# TODO: add user uuid to the player object and use it to identify players
+# TODO: implement restart game
+
 games: Dict[str, GuessSecretGame] = {}
 
 app = FastAPI()
@@ -131,6 +134,7 @@ async def submit_secret(sid, data):
         "username": username
     }, room=sid)
 
+    game.state.is_secret_set[username] = True
 
 @sio.event
 async def submit_guess(sid, data):
@@ -150,6 +154,10 @@ async def submit_guess(sid, data):
     game = games[game_id]
     opponent = game.player2 if game.player1.name == username else game.player1
 
+    if game.state.who_will_play and game.state.who_will_play != username:
+        await sio.emit("error", {"message": "Not your turn"}, room=sid)
+        return
+
     print(f"Opponent: {opponent.name}")
     try:
         winner = game.play(username, guess)
@@ -163,21 +171,22 @@ async def submit_guess(sid, data):
         await sio.emit("game_over", {
             "gameId": game_id,
             "winner": winner.name
-        }, room=game_id)  # Emit to the game room
+        }, room=game_id)
 
     await sio.emit("guess_submitted", {
         "gameId": game_id,
         "username": username,
         "guess": guess,
     }, room=sid)
-    # Notify the opponent that it's their turn
+    game.state.who_will_play = opponent.name
+
     await sio.emit("guess_turn", {
         "gameId": game_id,
         "username": opponent.name,
-    }, room=opponent.sid)  # Emit to the opponent's socket ID
-    # Broadcast the updated history to both players
+    }, room=opponent.sid)
+
     await sio.emit("update_history",  game.turn_history
-    , room=game_id)  # Emit to the game room
+    , room=game_id)
     print(sid == game.player1.sid, sid == game.player2.sid)
     print("Guess results emitted")
 
@@ -212,5 +221,15 @@ async def reconnect_player(sid, data):
     await sio.enter_room(sid, game_id)
     await sio.emit("reconnected", {
         "gameId": game_id,
-        "username": username
+        "username": username,
+        "secret": player.secret,
+        "history": game.turn_history,
+        "state": {
+            "is_game_over": game.state.is_game_over,
+            "is_game_ready": game.state.is_game_ready,
+            "is_game_started": game.state.is_game_started,
+            "is_game_full": game.state.is_game_full,
+            "is_secret_set": game.state.is_secret_set.get(username, False),
+            "who_will_play": game.state.who_will_play
+        }
     }, room=sid)
