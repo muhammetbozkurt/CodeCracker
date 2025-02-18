@@ -1,27 +1,72 @@
-<!-- static/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guessing Game - Main Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            max-width: 400px;
-            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-        }
-        input, button {
-            margin: 10px 0;
-            padding: 10px;
+            max-width: 400px;
             width: 100%;
         }
-        .game-id {
-            font-weight: bold;
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #6c63ff;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #574fdb;
+        }
+        .or {
+            margin: 1rem 0;
+            color: #666;
+        }
+        #status {
+            margin-top: 1rem;
+            color: #ff4d4d;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -29,10 +74,14 @@
     <div class="container">
         <h1>Guessing Game</h1>
         <input type="text" id="username" placeholder="Enter your username">
-        <button onclick="createGame()">Create New Game</button>
-        <p>OR</p>
+        <button onclick="createGame()">
+            <i class="fas fa-plus"></i> Create New Game
+        </button>
+        <div class="or">OR</div>
         <input type="text" id="gameId" placeholder="Enter Game ID to Join">
-        <button onclick="joinGame()">Join Game</button>
+        <button onclick="joinGame()">
+            <i class="fas fa-sign-in-alt"></i> Join Game
+        </button>
         <p id="status"></p>
     </div>
 
@@ -40,7 +89,6 @@
     <script>
         const socket = io();
 
-        // Function to create a new game
         function createGame() {
             const username = document.getElementById('username').value.trim();
             if (!username) {
@@ -50,7 +98,6 @@
             socket.emit('create_game', { username });
         }
 
-        // Function to join an existing game
         function joinGame() {
             const username = document.getElementById('username').value.trim();
             const gameId = document.getElementById('gameId').value.trim();
@@ -62,20 +109,15 @@
             socket.emit('join_game', { gameId, username });
         }
 
-        // Listen for game creation success
         socket.on('game_created', (data) => {
-            console.log(data);
             window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
         });
 
-        // Listen for game join success
         socket.on('game_joined', (data) => {
             window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
         });
 
-        // Listen for errors
         socket.on('error', (message) => {
-            console.log(JSON.stringify(message));
             document.getElementById('status').textContent = JSON.stringify(message);
         });
     </script>

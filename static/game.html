@@ -1,40 +1,129 @@
-<!-- static/game.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guessing Game - Game Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-        }
-        input, button {
-            margin: 10px 0;
-            padding: 10px;
+            max-width: 600px;
             width: 100%;
         }
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #6c63ff;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #574fdb;
+        }
+        .readonly {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
         .history {
-            margin-top: 20px;
+            margin-top: 1.5rem;
             text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
         }
         .history ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
         .history li {
-            padding: 5px;
-            border-bottom: 1px solid #ccc;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: fadeIn 0.5s ease;
+            scroll-behavior: smooth;
         }
-        .readonly {
-            background-color: #b8b8b8;
-            cursor: not-allowed;
+        .history li.correct {
+            border-left: 4px solid #4caf50;
+        }
+        .history li.incorrect {
+            border-left: 4px solid #ff4d4d;
+        }
+        .history li .icon {
+            font-size: 1.2rem;
+        }
+        .history li .details {
+            flex: 1;
+        }
+        .history li .details .player {
+            font-weight: 600;
+            color: #333;
+        }
+        .history li .details .guess {
+            color: #666;
+        }
+        .history li .details .result {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -47,13 +136,17 @@
         <!-- Secret Input Section -->
         <div id="secretSection">
             <input type="number" id="secret" placeholder="Enter your secret number">
-            <button onclick="submitSecret()">Submit Secret</button>
+            <button onclick="submitSecret()" id="secretButton">
+                <i class="fas fa-lock"></i> Submit Secret
+            </button>
         </div>
 
         <!-- Guess Input Section -->
         <div id="guessSection">
             <input type="number" id="guess" placeholder="Enter your guess">
-            <button onclick="submitGuess()" id="guessButton">Submit Guess</button>
+            <button onclick="submitGuess()" id="guessButton">
+                <i class="fas fa-paper-plane"></i> Submit Guess
+            </button>
         </div>
 
         <!-- Turn History Section -->
@@ -117,11 +210,19 @@
             }
         }
 
-        function updateHistory( history ) {
+        function updateHistory(history) {
             const historyList = document.getElementById('history');
             historyList.innerHTML = history.map(entry => `
-                <li>${entry.player} guessed ${entry.guess} - ${entry.result}</li>
+                <li class="${entry.result ? 'correct' : 'incorrect'}">
+                    <span class="icon">${entry.result ? '✅' : '❌'}</span>
+                    <div class="details">
+                        <div class="player">${entry.player}</div>
+                        <div class="guess">Guessed: ${entry.guess}</div>
+                        <div class="result">+${entry.correct_positions}, -${entry.correct_digits} </div>
+                    </div>
+                </li>
             `).join('');
+            historyList.scrollTop = historyList.scrollHeight;
         }
 
 
@@ -174,24 +275,13 @@
         socket.on('reconnected', (data) => {
             console.log('Reconnected successfully');
             const { gameId, username, secret, history, state } = data;
-            /*
-             "state": {
-                "is_game_over": game.state.is_game_over,
-                "is_game_ready": game.state.is_game_ready,
-                "is_game_started": game.state.is_game_started,
-                "is_game_full": game.state.is_game_full,
-                "is_secret_set": game.state.is_secret_set.get(username, False),
-                "who_will_play": game.state.who_will_play
-            }
-            */
             if (state.is_game_over) {
                 alert('Game Over!');
             } 
             if (state.is_secret_set) {
                 secretEnable(true);
             }
-            if (state.who_will_play !== username) {
-                alert('Your turn to guess!');
+            if (state.who_will_play && state.who_will_play !== username) {
                 guessEnable(true);
             }
             updateHistory(history);

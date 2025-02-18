@@ -190,8 +190,6 @@ async def submit_guess(sid, data):
     print(sid == game.player1.sid, sid == game.player2.sid)
     print("Guess results emitted")
 
-
-
 @sio.event
 async def reconnect_player(sid, data):
     game_id = data.get("gameId")
@@ -218,6 +216,7 @@ async def reconnect_player(sid, data):
         await sio.emit("error", {"message": "Player not found in game"}, room=sid)
         return
     
+    print(f"Player {username} reconnected to game {game_id}")
     await sio.enter_room(sid, game_id)
     await sio.emit("reconnected", {
         "gameId": game_id,

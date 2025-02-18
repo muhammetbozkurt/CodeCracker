@@ -15,7 +15,7 @@ class GameState:
 class GuessSecretGame(Game):
     def __init__(self, game_id: str):
         super().__init__(game_id)
-        self.turn_history: List[Tuple] = []
+        self.turn_history: List[Dict] = []
         self.players: List[GuessPlayer] = []
         self.state = GameState()
 
@@ -86,7 +86,9 @@ class GuessSecretGame(Game):
         self.turn_history.append({
             "player": current_player.name,
             "guess": guess,
-            "result": f"+{correct_positions}, -{correct_digits}"
+            "result": 4 == correct_positions,
+            "correct_positions": correct_positions,
+            "correct_digits": correct_digits
         })
 
         if self.is_game_over(correct_positions):
