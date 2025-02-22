@@ -16,7 +16,6 @@ from errors.mutability_error import MutabilityError
 
 # TODO: use GAME class instead of GuessSecretGame when new games are added
 
-# TODO: add user uuid to the player object and use it to identify players
 # TODO: implement restart game
 
 games: Dict[str, GuessSecretGame] = {}
