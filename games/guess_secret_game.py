@@ -51,8 +51,8 @@ class GuessSecretGame(Game):
         except ValueError:
             return False
 
-    def get_current_player_and_target_secret(self, username):
-        if self.player1.name == username:
+    def get_current_player_and_target_secret(self, uuid: str) -> Tuple[GuessPlayer, str]:
+        if self.player1.uuid == uuid:
             return self.player1, self.player2.secret
         return self.player2, self.player1.secret
     
@@ -70,20 +70,21 @@ class GuessSecretGame(Game):
 
         return correct_digits, correct_positions
     
-    def play(self, username: str, guess: str) -> Union[GuessPlayer, None]:
+    def play(self, uuid: str, guess: str) -> Union[GuessPlayer, None]:
         if not self.is_okay_start():
             raise InputError("Game is not ready to play")
 
         if not GuessSecretGame.is_valid_input(guess):
             raise InputError("Guess must be a 4 digit number and every digit must be different")
 
-        current_player, secret = self.get_current_player_and_target_secret(username)
-
-        if current_player.name != username:
-            raise InputError(f"It's not your turn, {username}. Wait for {current_player.name} to play")
+        if uuid != self.state.who_will_play and self.state.who_will_play:
+            raise InputError("Not your turn")
+    
+        current_player, secret = self.get_current_player_and_target_secret(uuid)
 
         correct_digits, correct_positions = self.calculate_score(guess, secret)
         self.turn_history.append({
+            "uuid": uuid,
             "player": current_player.name,
             "guess": guess,
             "result": 4 == correct_positions,

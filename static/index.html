@@ -110,11 +110,14 @@
         }
 
         socket.on('game_created', (data) => {
+            // data = { gameId, username, uuid }
             window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
+            localStorage.setItem('uuid', data.uuid);
         });
 
         socket.on('game_joined', (data) => {
             window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
+            localStorage.setItem('uuid', data.uuid);
         });
 
         socket.on('error', (message) => {

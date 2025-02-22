@@ -68,9 +68,12 @@ async def create_game(sid, data):
 
     games[game_id] = game
 
+    print(f"Game {game_id} created by {user_name} with player id {first_player.uuid}")
+
     await sio.emit("game_created", {
         "gameId": game_id,
-        "username": user_name
+        "username": user_name,
+        "uuid": first_player.uuid
     }, room=sid)
 
 
@@ -79,12 +82,10 @@ async def join_game(sid, data):
     user_name = data.get("username")
     game_id = data.get("gameId")
 
-    print(games)
-
     if not user_name or not game_id:
         await sio.emit("error", {"message": "Invalid user name or game id"}, room=sid)
         return
-    print(f"{user_name} is trying to join game {game_id}")
+
     if game_id not in games:
         print("Game not found")
         await sio.emit("error", {"message": "Game not found"}, room=sid)
@@ -93,11 +94,13 @@ async def join_game(sid, data):
     # Add the player to the game room
     await sio.enter_room(sid, game_id)
 
-    games[game_id].add_player(GuessPlayer(user_name, sid, game_id))
+    new_player = GuessPlayer(user_name, sid, game_id)
+    games[game_id].add_player(new_player)
 
     await sio.emit("game_joined", {
         "gameId": game_id,
-        "username": user_name
+        "username": user_name,
+        "uuid": new_player.uuid
     }, room=sid)
 
 
@@ -106,6 +109,7 @@ async def submit_secret(sid, data):
     game_id = data.get("gameId")
     secret = data.get("secret")
     username = data.get("username")
+    uuid = data.get("uuid")
 
     if not game_id or not secret or not username:
         await sio.emit("error", {"message": "Invalid game id, secret or username"}, room=sid)
@@ -121,7 +125,15 @@ async def submit_secret(sid, data):
         await sio.emit("error", {"message": "Invalid secret"}, room=sid)
         return
     
-    player = game.player1 if game.player1.name == username else game.player2
+    player = None
+    for p in game.players:
+        if p.uuid == uuid:
+            player = p
+            break
+    
+    if not player:
+        await sio.emit("error", {"message": "Player not found in game"}, room=sid)
+        return
 
     try:
         player.secret = secret
@@ -134,16 +146,17 @@ async def submit_secret(sid, data):
         "username": username
     }, room=sid)
 
-    game.state.is_secret_set[username] = True
+    game.state.is_secret_set[uuid] = True
 
 @sio.event
 async def submit_guess(sid, data):
     game_id = data.get("gameId")
     guess = data.get("guess")
     username = data.get("username")
+    uuid = data.get("uuid")
     print(f"Guess: {guess}")
 
-    if not game_id or not guess or not username:
+    if not game_id or not guess or not uuid:
         await sio.emit("error", {"message": "Invalid game id, guess or username"}, room=sid)
         return
 
@@ -152,15 +165,20 @@ async def submit_guess(sid, data):
         return
 
     game = games[game_id]
-    opponent = game.player2 if game.player1.name == username else game.player1
+    opponent = game.player2 if game.player1.uuid == uuid else game.player1
 
-    if game.state.who_will_play and game.state.who_will_play != username:
-        await sio.emit("error", {"message": "Not your turn"}, room=sid)
+    if not opponent:
+        await sio.emit("error", {"message": "Opponent not found"}, room=sid)
         return
 
-    print(f"Opponent: {opponent.name}")
+    # TODO: this should be handled by the game object
+    # if game.state.who_will_play and game.state.who_will_play != uuid:
+    #     await sio.emit("error", {"message": "Not your turn"}, room=sid)
+    #     return
+
+    print(f"Opponent: {opponent.name} - {opponent.uuid}")
     try:
-        winner = game.play(username, guess)
+        winner = game.play(uuid, guess)
     except InputError as e:
         print(f"Input error: {e}")
         await sio.emit("error", {"message": str(e)}, room=sid)
@@ -170,7 +188,7 @@ async def submit_guess(sid, data):
         # Game over - send the winner to both players
         await sio.emit("game_over", {
             "gameId": game_id,
-            "winner": winner.name
+            "winner": winner.name,
         }, room=game_id)
 
     await sio.emit("guess_submitted", {
@@ -178,7 +196,7 @@ async def submit_guess(sid, data):
         "username": username,
         "guess": guess,
     }, room=sid)
-    game.state.who_will_play = opponent.name
+    game.state.who_will_play = opponent.uuid
 
     await sio.emit("guess_turn", {
         "gameId": game_id,
@@ -194,6 +212,7 @@ async def submit_guess(sid, data):
 async def reconnect_player(sid, data):
     game_id = data.get("gameId")
     username = data.get("username")
+    uuid = data.get("uuid")
 
     if not game_id or not username:
         await sio.emit("error", {"message": "Invalid game ID or username"}, room=sid)
@@ -207,7 +226,7 @@ async def reconnect_player(sid, data):
     found = False
 
     for player in game.players:
-        if player.name == username:
+        if player.uuid == uuid:
             player.sid = sid
             found = True
             break
@@ -216,11 +235,12 @@ async def reconnect_player(sid, data):
         await sio.emit("error", {"message": "Player not found in game"}, room=sid)
         return
     
-    print(f"Player {username} reconnected to game {game_id}")
+    print(f"Player {username} reconnected to game {game_id} with uuid {uuid}")
     await sio.enter_room(sid, game_id)
     await sio.emit("reconnected", {
         "gameId": game_id,
         "username": username,
+        "uuid": uuid,
         "secret": player.secret,
         "history": game.turn_history,
         "state": {
@@ -228,7 +248,7 @@ async def reconnect_player(sid, data):
             "is_game_ready": game.state.is_game_ready,
             "is_game_started": game.state.is_game_started,
             "is_game_full": game.state.is_game_full,
-            "is_secret_set": game.state.is_secret_set.get(username, False),
+            "is_secret_set": game.state.is_secret_set.get(uuid, False),
             "who_will_play": game.state.who_will_play
         }
     }, room=sid)
