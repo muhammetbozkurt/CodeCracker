@@ -6,69 +6,7 @@
     <title>Guessing Game - Main Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        h1 {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 1.5rem;
-        }
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-        input:focus {
-            border-color: #6c63ff;
-        }
-        button {
-            width: 100%;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            background: #6c63ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        button:hover {
-            background: #574fdb;
-        }
-        .or {
-            margin: 1rem 0;
-            color: #666;
-        }
-        #status {
-            margin-top: 1rem;
-            color: #ff4d4d;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -82,47 +20,16 @@
         <button onclick="joinGame()">
             <i class="fas fa-sign-in-alt"></i> Join Game
         </button>
+        <div id="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading...
+        </div>
         <p id="status"></p>
+        <footer>
+            Made with ❤️
+        </footer>
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script>
-        const socket = io();
-
-        function createGame() {
-            const username = document.getElementById('username').value.trim();
-            if (!username) {
-                alert("Please enter a username!");
-                return;
-            }
-            socket.emit('create_game', { username });
-        }
-
-        function joinGame() {
-            const username = document.getElementById('username').value.trim();
-            const gameId = document.getElementById('gameId').value.trim();
-
-            if (!username || !gameId) {
-                alert("Please enter a username and game ID!");
-                return;
-            }
-            socket.emit('join_game', { gameId, username });
-        }
-
-        socket.on('game_created', (data) => {
-            // data = { gameId, username, uuid }
-            window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
-            localStorage.setItem('uuid', data.uuid);
-        });
-
-        socket.on('game_joined', (data) => {
-            window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
-            localStorage.setItem('uuid', data.uuid);
-        });
-
-        socket.on('error', (message) => {
-            document.getElementById('status').textContent = JSON.stringify(message);
-        });
-    </script>
+    <script src="static/js/index.js"></script>
 </body>
 </html>
