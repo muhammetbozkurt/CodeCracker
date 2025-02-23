@@ -252,3 +252,29 @@ async def reconnect_player(sid, data):
             "who_will_play": game.state.who_will_play
         }
     }, room=sid)
+
+@sio.event
+async def quit_game(sid, data):
+    game_id = data.get("gameId")
+    username = data.get("username")
+    uuid = data.get("uuid")
+
+    if not game_id or not username or not uuid:
+        await sio.emit("error", {"message": "Invalid game ID, username or uuid"}, room=sid)
+        return
+
+    if game_id not in games:
+        await sio.emit("game_not_found", {"message": "Game not found"}, room=sid)
+        return
+
+    game = games[game_id]
+
+    for player in game.players:
+        if player.uuid == uuid:
+            game.players.remove(player)
+            break
+    
+    if not game.players:
+        del games[game_id]
+
+    print(f"Player {username} quit game {game_id}")
