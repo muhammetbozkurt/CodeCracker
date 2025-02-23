@@ -87,7 +87,7 @@ async def join_game(sid, data):
 
     if game_id not in games:
         print("Game not found")
-        await sio.emit("error", {"message": "Game not found"}, room=sid)
+        await sio.emit("game_not_found", {"message": "Game not found"}, room=sid)
         return
     
     # Add the player to the game room
@@ -115,7 +115,7 @@ async def submit_secret(sid, data):
         return
 
     if game_id not in games:
-        await sio.emit("error", {"message": "Game not found"}, room=sid)
+        await sio.emit("game_not_found", {"message": "Game not found"}, room=sid)
         return
     
     game = games[game_id]
@@ -142,7 +142,8 @@ async def submit_secret(sid, data):
 
     await sio.emit("secret_submitted", {
         "gameId": game_id,
-        "username": username
+        "username": username,
+        "uuid": uuid
     }, room=sid)
 
     game.state.is_secret_set[uuid] = True
@@ -218,7 +219,7 @@ async def reconnect_player(sid, data):
         return
 
     if game_id not in games:
-        await sio.emit("error", {"message": "Game not found"}, room=sid)
+        await sio.emit("game_not_found", {"message": "Game not found"}, room=sid)
         return
 
     game = games[game_id]
