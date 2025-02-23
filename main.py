@@ -23,6 +23,8 @@ GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 # TODO: use GAME class instead of GuessSecretGame when new games are added
 
 # TODO: implement restart game
+# TODO: cover one quit game someone else is still in the game and the game is not over
+# TODO: add spectator mode
 
 games: Dict[str, GuessSecretGame] = {}
 
