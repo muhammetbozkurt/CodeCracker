@@ -1,8 +1,11 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import socketio
 import json
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from datetime import datetime, timedelta
 
 from player.player import Player
 from games.game import Game
@@ -13,6 +16,9 @@ from player.guess_player import GuessPlayer
 from typing import List, Union, Dict
 from errors.input_error import InputError
 from errors.mutability_error import MutabilityError
+from utils import check_game_timeout, generate_custom_id
+
+GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 
 # TODO: use GAME class instead of GuessSecretGame when new games are added
 
@@ -21,6 +27,17 @@ from errors.mutability_error import MutabilityError
 games: Dict[str, GuessSecretGame] = {}
 
 app = FastAPI()
+
+scheduler = AsyncIOScheduler()
+scheduler.add_job(
+    check_game_timeout,
+    trigger=IntervalTrigger(minutes=15),
+    args=[games, GAME_IDLE_TIMEOUT],
+    id="check_game_timeout",
+    name="Check game timeout every 10 seconds",
+    replace_existing=True,
+)
+scheduler.start()
 
 sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=[])
 app.mount("/socket.io", socketio.ASGIApp(sio))
@@ -60,7 +77,7 @@ async def create_game(sid, data):
         sio.emit("error", {"message": "Invalid user name"}, room=sid)
         return
        
-    game_id = str(len(games) + 1)
+    game_id = generate_custom_id()
     game = GuessSecretGame(game_id)
     first_player = GuessPlayer(user_name, sid, game_id)
     game.add_player(first_player)
@@ -272,9 +289,19 @@ async def quit_game(sid, data):
     for player in game.players:
         if player.uuid == uuid:
             game.players.remove(player)
+            sio.leave_room(sid, game_id)
             break
     
     if not game.players:
         del games[game_id]
 
     print(f"Player {username} quit game {game_id}")
+
+@sio.event
+async def disconnect(sid):
+    print("disconnect ", sid)
+    for game_id, game in games.items():
+        for player in game.players:
+            if player.sid == sid:
+                sio.leave_room(sid, game_id)
+                break

@@ -70,10 +70,7 @@ class GuessSecretGame(Game):
 
         return correct_digits, correct_positions
     
-    def play(self, uuid: str, guess: str) -> Union[GuessPlayer, None]:
-        if not self.is_okay_start():
-            raise InputError("Game is not ready to play")
-
+    def _play(self, uuid: str, guess: str) -> Union[GuessPlayer, None]:
         if not GuessSecretGame.is_valid_input(guess):
             raise InputError("Guess must be a 4 digit number and every digit must be different")
 
@@ -101,7 +98,12 @@ class GuessSecretGame(Game):
         for turn in self.turn_history:
             print(f"{turn['player']} guessed {turn['guess']} and got {turn['result']}")
 
-    def is_game_over(self, correct_positions):
+    # TODO: improve this method
+    def is_game_over(self, correct_positions=None):
+        self.state.is_game_over = correct_positions == 4
+        self.game_over_flag = correct_positions == 4
+        print(f"Correct positions: {correct_positions}")
+        print(f"Game over: {correct_positions == 4}")
         return correct_positions == 4
     
     def is_okay_start(self):

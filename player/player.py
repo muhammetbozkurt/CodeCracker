@@ -27,3 +27,9 @@ class Player(ABC):
             "score": self.score,
             "uuid": self.uuid
         }
+    
+    def __str__(self):
+        return f"{self.name} ({self.uuid})"
+    
+    def __repr__(self):
+        return self.__str__()
