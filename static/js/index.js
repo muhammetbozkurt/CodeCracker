@@ -1,11 +1,11 @@
 const socket = io();
 
 function showLoading() {
-    document.getElementById('loading').style.display = 'block';
+    // document.getElementById('loading').style.display = 'block';
 }
 
 function hideLoading() {
-    document.getElementById('loading').style.display = 'none';
+    // document.getElementById('loading').style.display = 'none';
 }
 
 function createGame() {

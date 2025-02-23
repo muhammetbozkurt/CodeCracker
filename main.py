@@ -25,6 +25,8 @@ GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 # TODO: implement restart game
 # TODO: cover one quit game someone else is still in the game and the game is not over
 # TODO: add spectator mode
+# TODO: win screen update
+# TODO: trun history show old guesses like whatsapp messages
 
 games: Dict[str, GuessSecretGame] = {}
 
