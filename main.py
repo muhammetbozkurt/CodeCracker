@@ -27,6 +27,7 @@ GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 # TODO: add spectator mode
 # TODO: win screen update
 # TODO: trun history show old guesses like whatsapp messages
+# TODO: inform users about opponent's name, status, etc.
 
 games: Dict[str, GuessSecretGame] = {}
 
