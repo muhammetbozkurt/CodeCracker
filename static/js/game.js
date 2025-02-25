@@ -74,17 +74,21 @@ function setGuess(guess) {
 
 function updateHistory(history) {
     const historyList = document.getElementById('history');
-    historyList.innerHTML = history.map(entry => `
-        <li class="${entry.result ? 'correct' : 'incorrect'}">
-            <span class="icon">${entry.result ? '✅' : '❌'}</span>
-            <div class="details">
-                <div class="player">${entry.player}</div>
-                <div class="guess">Guessed: ${entry.guess}</div>
-                <div class="result">Correct Digits in Correct Position: <strong>${entry.correct_positions}</strong>, Correct but Misplaced Digits: <strong>${entry.correct_digits}</strong></div>
-                <div class="timestamp">${new Date().toLocaleTimeString()}</div>
-            </div>
-        </li>
-    `).join('');
+    historyList.innerHTML = history.map(entry => {
+        const isCurrentUser = entry.uuid === uuid;
+        const alignmentClass = isCurrentUser ? 'current-user' : 'opponent';
+        return `
+            <li class="${entry.result ? 'correct' : 'incorrect'} ${alignmentClass}">
+                <span class="icon">${entry.result ? '✅' : '❌'}</span>
+                <div class="details">
+                    <div class="player">${entry.player}</div>
+                    <div class="guess">Guessed: ${entry.guess}</div>
+                    <div class="result">Correct Digits in Correct Position: <strong>${entry.correct_positions}</strong>, Correct but Misplaced Digits: <strong>${entry.correct_digits}</strong></div>
+                    <div class="timestamp">${new Date().toLocaleTimeString()}</div>
+                </div>
+            </li>
+        `;
+    }).join('');
     historyList.scrollTop = historyList.scrollHeight;
 }
 
