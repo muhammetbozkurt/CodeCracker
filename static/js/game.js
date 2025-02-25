@@ -1,7 +1,12 @@
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get('gameId');
-const username = urlParams.get('username');
+const username = localStorage.getItem('username');
 const uuid = localStorage.getItem('uuid');
+
+if (!gameId || !username || !uuid) {
+    alert('Invalid game ID or username!');
+    window.location.href = `/?gameId=${gameId}`;
+}
 
 document.getElementById('gameId').textContent = gameId;
 document.getElementById('username').textContent = username;

@@ -1,5 +1,12 @@
 const socket = io();
 
+const urlParams = new URLSearchParams(window.location.search);
+const legacyGameId = urlParams.get('gameId');
+
+if (legacyGameId) {
+    document.getElementById('gameId').value = legacyGameId;
+}
+
 function showLoading() {
     // document.getElementById('loading').style.display = 'block';
 }
@@ -32,14 +39,16 @@ function joinGame() {
 
 socket.on('game_created', (data) => {
     hideLoading();
-    window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
+    window.location.href = `/game.html?gameId=${data.gameId}`;
     localStorage.setItem('uuid', data.uuid);
+    localStorage.setItem('username', data.username);
 });
 
 socket.on('game_joined', (data) => {
     hideLoading();
-    window.location.href = `/game.html?gameId=${data.gameId}&username=${data.username}`;
+    window.location.href = `/game.html?gameId=${data.gameId}`;
     localStorage.setItem('uuid', data.uuid);
+    localStorage.setItem('username', data.username);
 });
 
 socket.on('error', (message) => {
