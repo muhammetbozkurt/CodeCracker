@@ -28,6 +28,7 @@ GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 # TODO: win screen update
 # TODO: trun history show old guesses like whatsapp messages
 # TODO: inform users about opponent's name, status, etc.
+# TODO: check uiid before user make any changes.
 
 games: Dict[str, GuessSecretGame] = {}
 
