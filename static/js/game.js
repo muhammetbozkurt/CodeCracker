@@ -92,6 +92,13 @@ function updateHistory(history) {
     historyList.scrollTop = historyList.scrollHeight;
 }
 
+function updateOpponentStatus(opponentName, status) {
+    const opponentNameText = document.getElementById('opponentNameText');
+    const gameStatusText = document.getElementById('gameStatusText');
+    opponentNameText.textContent = opponentName;
+    gameStatusText.textContent = status;
+}
+
 // Listen for secret submission success
 socket.on('secret_submitted', () => {
     console.log('Secret submitted successfully');
@@ -155,3 +162,16 @@ socket.on('game_not_found', () => {
 socket.on('disconnect', () => {
     console.log('Disconnected from server');
 });
+
+socket.on('opponent_status', (status) => {
+    const {players, gameStatus} = status;
+    console.log(players);
+    console.log(gameStatus);
+
+    const opponentName = players.filter(player => player !== uuid).pop();
+    console.log(opponentName);
+
+    updateOpponentStatus(opponentName.name || '', gameStatus);
+    // updateOpponentStatus(status);
+}
+);

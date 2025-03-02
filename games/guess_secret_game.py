@@ -27,6 +27,9 @@ class GuessSecretGame(Game):
     def remove_player(self, player: GuessPlayer):
         self.players.remove(player)
 
+    def get_opponent(self, player: GuessPlayer):
+        return self.players[0] if player == self.players[1] else self.players[1]
+
     @property
     def player1(self):
         if len(self.players) == 0:
@@ -55,8 +58,6 @@ class GuessSecretGame(Game):
         if self.player1.uuid == uuid:
             return self.player1, self.player2.secret
         return self.player2, self.player1.secret
-    
-
     
     def calculate_score(self, guess:str , secret: str) -> tuple:
         correct_digits = 0
@@ -108,4 +109,13 @@ class GuessSecretGame(Game):
     
     def is_okay_start(self):
         return len(self.players) == 2 and all([p.secret for p in self.players])
+
+    def get_status(self):
+        if self.state.is_game_over:
+            return "Game over"
+        if len(self.players) < 2:
+            return "Waiting for players"
+        if not self.is_okay_start():
+            return "Waiting for players to set their secrets"
+        return "Game is on"
         

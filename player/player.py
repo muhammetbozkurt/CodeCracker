@@ -1,3 +1,5 @@
+import json
+
 from abc import ABC, abstractmethod
 from uuid import uuid4
 
@@ -23,13 +25,13 @@ class Player(ABC):
         return {
             "name": self.name,
             "game_id": self.game_id,
-            "sid": self._sid,
+            "sid": self.sid,
             "score": self.score,
             "uuid": self.uuid
         }
     
     def __str__(self):
-        return f"{self.name} ({self.uuid})"
+        return json.dumps(self.to_dict())
     
     def __repr__(self):
         return self.__str__()

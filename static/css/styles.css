@@ -211,3 +211,24 @@ button:hover {
         transform: translateY(0);
     }
 }
+
+#opponentStatus {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+#opponentStatus i {
+    margin-right: 0.5rem;
+    color: #6c63ff;
+}
+
+#opponentStatusText {
+    font-weight: 600;
+    color: #333;
+}

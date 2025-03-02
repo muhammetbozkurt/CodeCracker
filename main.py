@@ -98,7 +98,6 @@ async def create_game(sid, data):
         "uuid": first_player.uuid
     }, room=sid)
 
-
 @sio.event
 async def join_game(sid, data):
     user_name = data.get("username")
@@ -124,7 +123,6 @@ async def join_game(sid, data):
         "username": user_name,
         "uuid": new_player.uuid
     }, room=sid)
-
 
 @sio.event
 async def submit_secret(sid, data):
@@ -170,6 +168,9 @@ async def submit_secret(sid, data):
     }, room=sid)
 
     game.state.is_secret_set[uuid] = True
+
+    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+
 
 @sio.event
 async def submit_guess(sid, data):
@@ -276,6 +277,8 @@ async def reconnect_player(sid, data):
         }
     }, room=sid)
 
+    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+
 @sio.event
 async def quit_game(sid, data):
     game_id = data.get("gameId")
@@ -303,6 +306,8 @@ async def quit_game(sid, data):
 
     print(f"Player {username} quit game {game_id}")
 
+    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+
 @sio.event
 async def disconnect(sid):
     print("disconnect ", sid)
@@ -310,4 +315,6 @@ async def disconnect(sid):
         for player in game.players:
             if player.sid == sid:
                 sio.leave_room(sid, game_id)
+                # game.players.remove(player)
+                await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
                 break
