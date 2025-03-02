@@ -168,10 +168,9 @@ socket.on('opponent_status', (status) => {
     console.log(players);
     console.log(gameStatus);
 
-    const opponentName = players.filter(player => player !== uuid).pop();
+    const opponentName = players.filter(player => player.uuid !== uuid).pop();
     console.log(opponentName);
 
-    updateOpponentStatus(opponentName.name || '', gameStatus);
-    // updateOpponentStatus(status);
+    updateOpponentStatus(opponentName?.name || '', gameStatus);
 }
 );
