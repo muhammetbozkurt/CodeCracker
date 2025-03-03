@@ -119,12 +119,12 @@ socket.on('update_history', (history) => {
 });
 
 socket.on('game_over', (winner) => {
-    alert(`Game Over! ${JSON.stringify(winner)} wins!`);
+    alert(`Game Over! ${winner.winner} wins!`);
 });
 
 // Listen for errors
 socket.on('error', (message) => {
-    alert(JSON.stringify(message));
+    alert(message.message);
 });
 
 socket.on('connect', () => {
