@@ -4,12 +4,13 @@ from typing import List, Union, Tuple, Dict
 from errors.input_error import InputError
 
 class GameState:
-    who_will_play: str = None
-    is_game_over: bool = False
-    is_game_ready: bool = False
-    is_game_started: bool = False
-    is_game_full: bool = False
-    is_secret_set: Dict[str, bool] = {} # {player_uuid: bool}
+    def __init__(self):
+        self.who_will_play: str = None
+        self.is_game_over: bool = False
+        self.is_game_ready: bool = False
+        self.is_game_started: bool = False
+        self.is_game_full: bool = False
+        self.is_secret_set: Dict[str, bool] = {} # {player_uuid: bool}
 
 
 class GuessSecretGame(Game):

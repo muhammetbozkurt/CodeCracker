@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe - CodeCracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <style>
+        .tictactoe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 20px auto;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .cell:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .cell.x-mark {
+            color: #ff4757;
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+        }
+
+        .cell.o-mark {
+            color: #1e90ff;
+            text-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glass-panel" style="max-width: 600px; margin: 40px auto; text-align: center;">
+        <h2>Tic-Tac-Toe</h2>
+        <p style="margin-bottom: 10px;">Game ID: <span id="gameIdDisplay"></span> <button onclick="copyGameId()"
+                style="background: rgba(255,255,255,0.2); margin-left: 10px; padding: 5px 10px; border-radius: 4px; width: auto; font-size: 0.9em; cursor: pointer; color: white;"><i
+                    class="fas fa-copy"></i> Copy</button></p>
+        <div id="game-info" style="margin-bottom: 20px;">
+            <p id="status-message">Connecting to server...</p>
+        </div>
+
+        <div class="tictactoe-board" id="board">
+            <div class="cell" onclick="makeMove(0)" id="cell-0"></div>
+            <div class="cell" onclick="makeMove(1)" id="cell-1"></div>
+            <div class="cell" onclick="makeMove(2)" id="cell-2"></div>
+            <div class="cell" onclick="makeMove(3)" id="cell-3"></div>
+            <div class="cell" onclick="makeMove(4)" id="cell-4"></div>
+            <div class="cell" onclick="makeMove(5)" id="cell-5"></div>
+            <div class="cell" onclick="makeMove(6)" id="cell-6"></div>
+            <div class="cell" onclick="makeMove(7)" id="cell-7"></div>
+            <div class="cell" onclick="makeMove(8)" id="cell-8"></div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button onclick="quitGame()" style="background: rgba(255, 0, 0, 0.6);">Quit Game</button>
+        </div>
+    </div>
+
+    <!-- End Game Modal -->
+    <div id="modalOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 999;">
+    </div>
+    <div id="endGameModal" class="glass-panel"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; text-align: center; width: 80%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <h2 id="endGameTitle" style="margin-bottom: 20px;">Game Over</h2>
+        <p id="endGameMessage" style="font-size: 1.2em; margin-bottom: 30px;"></p>
+        <button onclick="window.location.href='/'"
+            style="background: rgba(30, 144, 255, 0.8); margin-right: 10px;">Return Home</button>
+        <button onclick="quitGame()" style="background: rgba(255, 0, 0, 0.6);">Quit Game</button>
+    </div>
+
+    <!-- AdSense Leaderboard Slot -->
+    <div class="ad-leaderboard">
+        <span>Advertisement Placeholder</span>
+    </div>
+
+    <footer>
+        Made with ❤️ for codebreakers.
+    </footer>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="static/js/tictactoe.js"></script>
+</body>
+
+</html>
