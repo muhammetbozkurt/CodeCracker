@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeCracker - Main Page</title>
+    <meta name="description"
+        content="Play CodeCracker - A thrilling 2-player multiplayer number guessing game. Outsmart your opponent by cracking their secret code first!">
+    <title>CodeCracker - Play Now</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="static/css/styles.css">
+    <!-- Google AdSense SDK -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8668653509467475"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <div class="container">
+    <div class="glass-panel login-card">
         <h1>CodeCracker</h1>
+        <select id="gameType"
+            style="margin-bottom: 1rem; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: white; width: 100%; outline: none;">
+            <option value="guess_secret" style="color: black;">Guess The Secret</option>
+            <option value="tictactoe" style="color: black;">Tic-Tac-Toe</option>
+        </select>
         <input type="text" id="username" placeholder="Enter your username">
         <button onclick="createGame()">
             <i class="fas fa-plus"></i> Create New Game
@@ -40,7 +50,20 @@
         </footer>
     </div>
 
+    <!-- AdSense Leaderboard Slot -->
+    <div class="ad-leaderboard">
+        <!-- Optional Ad text for dev viewing -->
+        <span>Advertisement Placehoder</span>
+        <!-- Note: When live, place the <ins> code block here -->
+    </div>
+
+    <!-- Footer intentionally placed explicitly outside container below the ad -->
+    <footer>
+        Made with ❤️ for codebreakers.
+    </footer>
+
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="static/js/index.js"></script>
 </body>
+
 </html>

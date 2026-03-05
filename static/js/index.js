@@ -17,12 +17,13 @@ function hideLoading() {
 
 function createGame() {
     const username = document.getElementById('username').value.trim();
+    const gameType = document.getElementById('gameType').value;
     if (!username) {
         alert("Please enter a username!");
         return;
     }
     showLoading();
-    socket.emit('create_game', { username });
+    socket.emit('create_game', { username, game_type: gameType });
 }
 
 function joinGame() {
@@ -39,14 +40,16 @@ function joinGame() {
 
 socket.on('game_created', (data) => {
     hideLoading();
-    window.location.href = `/game.html?gameId=${data.gameId}`;
+    const page = data.gameType === 'tictactoe' ? 'tictactoe.html' : 'game.html';
+    window.location.href = `/${page}?gameId=${data.gameId}`;
     localStorage.setItem('uuid', data.uuid);
     localStorage.setItem('username', data.username);
 });
 
 socket.on('game_joined', (data) => {
     hideLoading();
-    window.location.href = `/game.html?gameId=${data.gameId}`;
+    const page = data.gameType === 'tictactoe' ? 'tictactoe.html' : 'game.html';
+    window.location.href = `/${page}?gameId=${data.gameId}`;
     localStorage.setItem('uuid', data.uuid);
     localStorage.setItem('username', data.username);
 });

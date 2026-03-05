@@ -12,6 +12,8 @@ from games.game import Game
 
 from games.guess_secret_game import GuessSecretGame
 from player.guess_player import GuessPlayer
+from games.tictactoe_game import TicTacToeGame
+from player.tictactoe_player import TicTacToePlayer
 
 from typing import List, Union, Dict
 from errors.input_error import InputError
@@ -20,9 +22,7 @@ from utils import check_game_timeout, generate_custom_id
 
 GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 
-# TODO: use GAME class instead of GuessSecretGame when new games are added
-
-# TODO: implement restart game
+#TODO: implement restart game
 # TODO: cover one quit game someone else is still in the game and the game is not over
 # TODO: add spectator mode
 # TODO: win screen update
@@ -30,7 +30,7 @@ GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 # TODO: inform users about opponent's name, status, etc.
 # TODO: check uiid before user make any changes.
 
-games: Dict[str, GuessSecretGame] = {}
+games: Dict[str, Game] = {}
 
 app = FastAPI()
 
@@ -60,6 +60,11 @@ async def get():
 async def get_game():
     with open("static/game.html", "r") as f:
         return HTMLResponse(content=f.read())
+
+@app.get("/tictactoe.html")
+async def get_tictactoe():
+    with open("static/tictactoe.html", "r") as f:
+        return HTMLResponse(content=f.read())
     
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -78,24 +83,34 @@ async def connect(sid, environ):
 @sio.event
 async def create_game(sid, data):
     user_name = data.get("username")
+    game_type = data.get("game_type", "guess_secret")
 
     if not user_name:
-        sio.emit("error", {"message": "Invalid user name"}, room=sid)
+        await sio.emit("error", {"message": "Invalid user name"}, room=sid)
         return
        
     game_id = generate_custom_id()
-    game = GuessSecretGame(game_id)
-    first_player = GuessPlayer(user_name, sid, game_id)
+    if game_type == "guess_secret":
+        game = GuessSecretGame(game_id)
+        first_player = GuessPlayer(user_name, sid, game_id)
+    elif game_type == "tictactoe":
+        game = TicTacToeGame(game_id)
+        first_player = TicTacToePlayer(user_name, sid, game_id, symbol="X")
+    else:
+        await sio.emit("error", {"message": "Invalid game type"}, room=sid)
+        return
+
     game.add_player(first_player)
 
     games[game_id] = game
 
-    print(f"Game {game_id} created by {user_name} with player id {first_player.uuid}")
+    print(f"Game {game_id} ({game_type}) created by {user_name} with player id {first_player.uuid}")
 
     await sio.emit("game_created", {
         "gameId": game_id,
         "username": user_name,
-        "uuid": first_player.uuid
+        "uuid": first_player.uuid,
+        "gameType": game_type
     }, room=sid)
 
 @sio.event
@@ -112,16 +127,28 @@ async def join_game(sid, data):
         await sio.emit("game_not_found", {"message": "Game not found"}, room=sid)
         return
     
+    game = games[game_id]
+    
     # Add the player to the game room
     await sio.enter_room(sid, game_id)
 
-    new_player = GuessPlayer(user_name, sid, game_id)
-    games[game_id].add_player(new_player)
+    if isinstance(game, GuessSecretGame):
+        new_player = GuessPlayer(user_name, sid, game_id)
+        game_type = "guess_secret"
+    elif isinstance(game, TicTacToeGame):
+        new_player = TicTacToePlayer(user_name, sid, game_id, symbol="O")
+        game_type = "tictactoe"
+    else:
+        await sio.emit("error", {"message": "Unknown game type"}, room=sid)
+        return
+
+    game.add_player(new_player)
 
     await sio.emit("game_joined", {
         "gameId": game_id,
         "username": user_name,
-        "uuid": new_player.uuid
+        "uuid": new_player.uuid,
+        "gameType": game_type
     }, room=sid)
 
 @sio.event
@@ -140,6 +167,11 @@ async def submit_secret(sid, data):
         return
     
     game = games[game_id]
+
+    # Check UUID
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
 
     if not GuessSecretGame.is_valid_input(secret):
         await sio.emit("error", {"message": "Invalid secret"}, room=sid)
@@ -169,7 +201,8 @@ async def submit_secret(sid, data):
 
     game.state.is_secret_set[uuid] = True
 
-    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+    who_will_play = getattr(game.state, 'who_will_play', None)
+    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status(), "who_will_play": who_will_play}, room=game_id)
 
 
 @sio.event
@@ -189,16 +222,16 @@ async def submit_guess(sid, data):
         return
 
     game = games[game_id]
+
+    # Check UUID
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
     opponent = game.player2 if game.player1.uuid == uuid else game.player1
 
     if not opponent:
         await sio.emit("error", {"message": "Opponent not found"}, room=sid)
         return
-
-    # TODO: this should be handled by the game object
-    # if game.state.who_will_play and game.state.who_will_play != uuid:
-    #     await sio.emit("error", {"message": "Not your turn"}, room=sid)
-    #     return
 
     print(f"Opponent: {opponent.name} - {opponent.uuid}")
     try:
@@ -233,6 +266,62 @@ async def submit_guess(sid, data):
     print("Guess results emitted")
 
 @sio.event
+async def submit_tictactoe_move(sid, data):
+    game_id = data.get("gameId")
+    move = data.get("move")
+    username = data.get("username")
+    uuid = data.get("uuid")
+
+    if not game_id or move is None or not uuid:
+        await sio.emit("error", {"message": "Invalid parameters"}, room=sid)
+        return
+
+    if game_id not in games:
+        await sio.emit("error", {"message": "Game not found"}, room=sid)
+        return
+
+    game = games[game_id]
+    if not isinstance(game, TicTacToeGame):
+        await sio.emit("error", {"message": "Not a Tic-Tac-Toe game"}, room=sid)
+        return
+
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
+    opponent = game.get_opponent(next((p for p in game.players if p.uuid == uuid), None))
+
+    if not opponent:
+        await sio.emit("error", {"message": "Opponent not found"}, room=sid)
+        return
+
+    try:
+        winner = game.play(uuid, move)
+    except InputError as e:
+        await sio.emit("error", {"message": str(e)}, room=sid)
+        return
+
+    await sio.emit("move_submitted", {
+        "gameId": game_id,
+        "username": username,
+        "move": move,
+    }, room=sid)
+
+    await sio.emit("guess_turn", {
+        "gameId": game_id,
+        "username": opponent.name,
+    }, room=opponent.sid)
+
+    await sio.emit("update_board", {
+        "board": game.state.board,
+        "history": game.turn_history
+    }, room=game_id)
+
+    if winner == "draw":
+        await sio.emit("game_over", {"gameId": game_id, "winner": "draw"}, room=game_id)
+    elif winner:
+        await sio.emit("game_over", {"gameId": game_id, "winner": winner.name}, room=game_id)
+
+@sio.event
 async def reconnect_player(sid, data):
     game_id = data.get("gameId")
     username = data.get("username")
@@ -261,23 +350,35 @@ async def reconnect_player(sid, data):
     
     print(f"Player {username} reconnected to game {game_id} with uuid {uuid}")
     await sio.enter_room(sid, game_id)
+    secret = getattr(player, 'secret', None)
+    
+    state_dict = {
+        "is_game_over": game.state.is_game_over,
+        "is_game_ready": game.state.is_game_ready,
+        "is_game_started": game.state.is_game_started,
+        "is_game_full": game.state.is_game_full,
+        "who_will_play": game.state.who_will_play
+    }
+
+    if isinstance(game, GuessSecretGame):
+        state_dict["is_secret_set"] = game.state.is_secret_set.get(uuid, False)
+        game_type = "guess_secret"
+    elif isinstance(game, TicTacToeGame):
+        state_dict["board"] = game.state.board
+        game_type = "tictactoe"
+
     await sio.emit("reconnected", {
         "gameId": game_id,
+        "gameType": game_type,
         "username": username,
         "uuid": uuid,
-        "secret": player.secret,
+        "secret": secret,
         "history": game.turn_history,
-        "state": {
-            "is_game_over": game.state.is_game_over,
-            "is_game_ready": game.state.is_game_ready,
-            "is_game_started": game.state.is_game_started,
-            "is_game_full": game.state.is_game_full,
-            "is_secret_set": game.state.is_secret_set.get(uuid, False),
-            "who_will_play": game.state.who_will_play
-        }
+        "state": state_dict
     }, room=sid)
 
-    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+    who_will_play = getattr(game.state, 'who_will_play', None)
+    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status(), "who_will_play": who_will_play}, room=game_id)
 
 @sio.event
 async def quit_game(sid, data):
@@ -295,18 +396,30 @@ async def quit_game(sid, data):
 
     game = games[game_id]
 
+    # Check UUID
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
+
+    was_active = len(game.players) == 2 and not game.state.is_game_over
+
     for player in game.players:
         if player.uuid == uuid:
             game.players.remove(player)
             sio.leave_room(sid, game_id)
             break
+            
+    if was_active:
+        game.state.is_game_over = True
+        await sio.emit("error", {"message": f"{username} has left the game. Game over."}, room=game_id)
     
     if not game.players:
         del games[game_id]
 
     print(f"Player {username} quit game {game_id}")
 
-    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+    who_will_play = getattr(game.state, 'who_will_play', None)
+    await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status(), "who_will_play": who_will_play}, room=game_id)
 
 @sio.event
 async def disconnect(sid):
@@ -316,5 +429,6 @@ async def disconnect(sid):
             if player.sid == sid:
                 sio.leave_room(sid, game_id)
                 # game.players.remove(player)
-                await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status()}, room=game_id)
+                who_will_play = getattr(game.state, 'who_will_play', None)
+                await sio.emit("opponent_status", {"players": [{"name": p.name, "uuid": p.uuid} for p in game.players], "gameStatus": game.get_status(), "who_will_play": who_will_play}, room=game_id)
                 break

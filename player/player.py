@@ -19,6 +19,8 @@ class Player(ABC):
         return self._uuid
     
     def __eq__(self, other):
+        if not isinstance(other, Player):
+            return False
         return self.uuid == other.uuid
 
     def to_dict(self):

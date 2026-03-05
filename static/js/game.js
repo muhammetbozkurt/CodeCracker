@@ -11,6 +11,12 @@ if (!gameId || !username || !uuid) {
 document.getElementById('gameId').textContent = gameId;
 document.getElementById('username').textContent = username;
 
+function copyGameId() {
+    navigator.clipboard.writeText(gameId).then(() => {
+        alert("Game ID copied!");
+    });
+}
+
 const socket = io();
 
 // Join the game room
@@ -141,7 +147,7 @@ socket.on('reconnected', (data) => {
     console.log(uuid)
     if (state.is_game_over) {
         alert('Game Over!');
-    } 
+    }
     if (state.is_secret_set) {
         setSecret(secret);
         secretEnable(true);
@@ -164,7 +170,7 @@ socket.on('disconnect', () => {
 });
 
 socket.on('opponent_status', (status) => {
-    const {players, gameStatus} = status;
+    const { players, gameStatus } = status;
     console.log(players);
     console.log(gameStatus);
 
