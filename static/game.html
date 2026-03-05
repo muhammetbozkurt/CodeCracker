@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeCracker - Game Page</title>
+    <meta name="description"
+        content="Play CodeCracker - A thrilling 2-player multiplayer number guessing game. Outsmart your opponent by cracking their secret code first!">
+    <title>CodeCracker - Play Now</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="static/css/styles.css">
+    <!-- Google AdSense SDK -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8668653509467475"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <div class="container">
+    <div class="game-dashboard">
         <!-- Left Panel: Game Controls -->
-        <div class="left-panel">
+        <div class="glass-panel left-panel">
             <h1>CodeCracker</h1>
             <p>Game ID: <span id="gameId"></span></p>
             <p>Username: <span id="username"></span></p>
@@ -40,20 +45,31 @@
             </div>
         </div>
 
-        <!-- Right Panel: Turn History -->
-        <div class="right-panel">
-            <!-- Quit Button -->
-            <button onclick="quitGame()" id="quitButton">
-                <i class="fas fa-sign-out-alt"></i> Quit Game
-            </button>
-            <h2>Turn History</h2>
-            <div class="history">
-                <ul id="history"></ul>
-            </div>
-        </div>        
+    </div>
+
+    <!-- Middle Panel: Turn History -->
+    <div class="glass-panel right-panel">
+        <!-- Quit Button -->
+        <button onclick="quitGame()" id="quitButton">
+            <i class="fas fa-sign-out-alt"></i> Quit Game
+        </button>
+        <h2>Turn History</h2>
+        <div class="history">
+            <ul id="history"></ul>
+        </div>
+    </div>
+
+    <!-- Right Sidebar Area: Skyscraper Ad -->
+    <div class="ad-sidebar">
+        <div class="ad-skyscraper">
+            <span>Skyscraper Ad Placeholder</span>
+            <!-- Post actual AdSense code here -->
+        </div>
+    </div>
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="static/js/game.js"></script>
 </body>
+
 </html>

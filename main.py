@@ -20,9 +20,7 @@ from utils import check_game_timeout, generate_custom_id
 
 GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 
-# TODO: use GAME class instead of GuessSecretGame when new games are added
-
-# TODO: implement restart game
+#TODO: implement restart game
 # TODO: cover one quit game someone else is still in the game and the game is not over
 # TODO: add spectator mode
 # TODO: win screen update
@@ -30,7 +28,7 @@ GAME_IDLE_TIMEOUT = timedelta(minutes=10)
 # TODO: inform users about opponent's name, status, etc.
 # TODO: check uiid before user make any changes.
 
-games: Dict[str, GuessSecretGame] = {}
+games: Dict[str, Game] = {}
 
 app = FastAPI()
 
@@ -141,6 +139,11 @@ async def submit_secret(sid, data):
     
     game = games[game_id]
 
+    # Check UUID
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
+
     if not GuessSecretGame.is_valid_input(secret):
         await sio.emit("error", {"message": "Invalid secret"}, room=sid)
         return
@@ -189,16 +192,16 @@ async def submit_guess(sid, data):
         return
 
     game = games[game_id]
+
+    # Check UUID
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
     opponent = game.player2 if game.player1.uuid == uuid else game.player1
 
     if not opponent:
         await sio.emit("error", {"message": "Opponent not found"}, room=sid)
         return
-
-    # TODO: this should be handled by the game object
-    # if game.state.who_will_play and game.state.who_will_play != uuid:
-    #     await sio.emit("error", {"message": "Not your turn"}, room=sid)
-    #     return
 
     print(f"Opponent: {opponent.name} - {opponent.uuid}")
     try:
@@ -295,11 +298,22 @@ async def quit_game(sid, data):
 
     game = games[game_id]
 
+    # Check UUID
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
+
+    was_active = len(game.players) == 2 and not game.state.is_game_over
+
     for player in game.players:
         if player.uuid == uuid:
             game.players.remove(player)
             sio.leave_room(sid, game_id)
             break
+            
+    if was_active:
+        game.state.is_game_over = True
+        await sio.emit("error", {"message": f"{username} has left the game. Game over."}, room=game_id)
     
     if not game.players:
         del games[game_id]

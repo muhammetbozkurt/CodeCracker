@@ -99,13 +99,12 @@ class GuessSecretGame(Game):
         for turn in self.turn_history:
             print(f"{turn['player']} guessed {turn['guess']} and got {turn['result']}")
 
-    # TODO: improve this method
     def is_game_over(self, correct_positions=None):
-        self.state.is_game_over = correct_positions == 4
-        self.game_over_flag = correct_positions == 4
-        print(f"Correct positions: {correct_positions}")
-        print(f"Game over: {correct_positions == 4}")
-        return correct_positions == 4
+        if correct_positions is not None:
+            is_over = correct_positions == 4
+            self.state.is_game_over = is_over
+            self.game_over_flag = is_over
+        return self.game_over_flag
     
     def is_okay_start(self):
         return len(self.players) == 2 and all([p.secret for p in self.players])
