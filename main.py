@@ -14,6 +14,8 @@ from games.guess_secret_game import GuessSecretGame
 from player.guess_player import GuessPlayer
 from games.tictactoe_game import TicTacToeGame
 from player.tictactoe_player import TicTacToePlayer
+from games.connect4_game import Connect4Game
+from player.connect4_player import Connect4Player
 
 from typing import List, Union, Dict
 from errors.input_error import InputError
@@ -65,6 +67,11 @@ async def get_game():
 async def get_tictactoe():
     with open("static/tictactoe.html", "r") as f:
         return HTMLResponse(content=f.read())
+
+@app.get("/connect4.html")
+async def get_connect4():
+    with open("static/connect4.html", "r") as f:
+        return HTMLResponse(content=f.read())
     
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -96,6 +103,9 @@ async def create_game(sid, data):
     elif game_type == "tictactoe":
         game = TicTacToeGame(game_id)
         first_player = TicTacToePlayer(user_name, sid, game_id, symbol="X")
+    elif game_type == "connect4":
+        game = Connect4Game(game_id)
+        first_player = Connect4Player(user_name, sid, game_id, color="Red")
     else:
         await sio.emit("error", {"message": "Invalid game type"}, room=sid)
         return
@@ -138,6 +148,9 @@ async def join_game(sid, data):
     elif isinstance(game, TicTacToeGame):
         new_player = TicTacToePlayer(user_name, sid, game_id, symbol="O")
         game_type = "tictactoe"
+    elif isinstance(game, Connect4Game):
+        new_player = Connect4Player(user_name, sid, game_id, color="Yellow")
+        game_type = "connect4"
     else:
         await sio.emit("error", {"message": "Unknown game type"}, room=sid)
         return
@@ -322,6 +335,62 @@ async def submit_tictactoe_move(sid, data):
         await sio.emit("game_over", {"gameId": game_id, "winner": winner.name}, room=game_id)
 
 @sio.event
+async def submit_connect4_move(sid, data):
+    game_id = data.get("gameId")
+    col = data.get("col")
+    username = data.get("username")
+    uuid = data.get("uuid")
+
+    if not game_id or col is None or not uuid:
+        await sio.emit("error", {"message": "Invalid parameters"}, room=sid)
+        return
+
+    if game_id not in games:
+        await sio.emit("error", {"message": "Game not found"}, room=sid)
+        return
+
+    game = games[game_id]
+    if not isinstance(game, Connect4Game):
+        await sio.emit("error", {"message": "Not a Connect 4 game"}, room=sid)
+        return
+
+    if uuid not in [p.uuid for p in game.players]:
+        await sio.emit("error", {"message": "Invalid UUID for this game"}, room=sid)
+        return
+    opponent = game.get_opponent(next((p for p in game.players if p.uuid == uuid), None))
+
+    if not opponent:
+        await sio.emit("error", {"message": "Opponent not found"}, room=sid)
+        return
+
+    try:
+        winner = game.play(uuid, col)
+    except InputError as e:
+        await sio.emit("error", {"message": str(e)}, room=sid)
+        return
+
+    await sio.emit("move_submitted", {
+        "gameId": game_id,
+        "username": username,
+        "col": col,
+    }, room=sid)
+
+    await sio.emit("guess_turn", {
+        "gameId": game_id,
+        "username": opponent.name,
+    }, room=opponent.sid)
+
+    await sio.emit("update_board", {
+        "board": game.state.board,
+        "history": game.turn_history
+    }, room=game_id)
+
+    if winner == "draw":
+        await sio.emit("game_over", {"gameId": game_id, "winner": "draw"}, room=game_id)
+    elif winner:
+        await sio.emit("game_over", {"gameId": game_id, "winner": winner.name}, room=game_id)
+
+@sio.event
 async def reconnect_player(sid, data):
     game_id = data.get("gameId")
     username = data.get("username")
@@ -366,6 +435,9 @@ async def reconnect_player(sid, data):
     elif isinstance(game, TicTacToeGame):
         state_dict["board"] = game.state.board
         game_type = "tictactoe"
+    elif isinstance(game, Connect4Game):
+        state_dict["board"] = game.state.board
+        game_type = "connect4"
 
     await sio.emit("reconnected", {
         "gameId": game_id,
