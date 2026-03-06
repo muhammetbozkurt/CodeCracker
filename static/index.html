@@ -18,8 +18,11 @@
 <body>
     <div class="glass-panel login-card">
         <h1>CodeCracker</h1>
+        <label for="gameType"
+            style="display: block; text-align: left; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Select
+            a Game to Play:</label>
         <select id="gameType"
-            style="margin-bottom: 1rem; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: white; width: 100%; outline: none;">
+            style="margin-bottom: 1.5rem; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: white; width: 100%; outline: none; cursor: pointer; font-family: inherit; font-size: 1rem;">
             <option value="guess_secret" style="color: black;">Guess The Secret</option>
             <option value="tictactoe" style="color: black;">Tic-Tac-Toe</option>
         </select>
@@ -38,7 +41,7 @@
         <!-- <p id="status"></p>¨ -->
         <details style="margin-bottom: 1.5rem;">
             <summary>How to Play</summary>
-            <ul>
+            <ul id="gameRules">
                 <li>Each player selects a secret number.</li>
                 <li>Players take turns guessing each other's secret number.</li>
                 <li>After each guess, hints are provided about correct digits and their positions.</li>
@@ -63,7 +66,7 @@
     </footer>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script src="static/js/index.js"></script>
+    <script src="static/js/index.js?v=3"></script>
 </body>
 
 </html>
