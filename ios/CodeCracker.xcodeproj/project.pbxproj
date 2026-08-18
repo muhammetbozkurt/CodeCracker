@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6F36BB6B5AE31FA54B32AAAF /* Connect4Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9133D65C578DF45C11D999 /* Connect4Game.swift */; };
+		8E91FD4F7A0B87A6BC365E72 /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB9D1B72F62FDD77C54358C /* GameError.swift */; };
+		1F0BBD025BFFCAA6E1A36B06 /* GameID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C46AA3FF5834AF34CF3682 /* GameID.swift */; };
+		51EEBA73E7928B9A20FB9EFD /* GuessSecretGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070FF875D1B56EF050E4D27F /* GuessSecretGame.swift */; };
+		95EEE0E41043025DE78BD956 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B90175EA7994F59BE9DB5E /* Player.swift */; };
+		57C399847E0C632C433F06FF /* SecretCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A53369F33E07F068168CBAE /* SecretCode.swift */; };
+		0BA818C939D9EFA3BD790B27 /* TicTacToeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F88FA4B40E810F82E9900B /* TicTacToeGame.swift */; };
+		FF12B8ADE8A7B35B9909ADB3 /* TurnBasedGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53547FC20CF2C1895BB9C2E /* TurnBasedGame.swift */; };
+		AF7BCF08C339A4196EAEFA0B /* CodeCrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77932AF3C86984D740CCAF86 /* CodeCrackerApp.swift */; };
+		2859DF2DDF332E5AC02CE025 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C246A9485B77469F46C5F1E /* ContentView.swift */; };
+		F03524C782E495549E072FE6 /* TicTacToeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F203DDBAE1121A3186C5607 /* TicTacToeView.swift */; };
+		29C175FEACEBDCBF948B0D85 /* Connect4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187E6A0F23B9F7A08AD13340 /* Connect4View.swift */; };
+		556193CD929DB8709E6E9DED /* CodeCrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D0A457B46B0918953094DC /* CodeCrackerView.swift */; };
+		0697C6763E8E0773BC7E0ABD /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC6669E969A7617E94B730B /* Components.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F8ADA977F53FD5687BC63DFB /* CodeCracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeCracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E9133D65C578DF45C11D999 /* Connect4Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Connect4Game.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/Connect4Game.swift; sourceTree = "<group>"; };
+		4BB9D1B72F62FDD77C54358C /* GameError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GameError.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/GameError.swift; sourceTree = "<group>"; };
+		95C46AA3FF5834AF34CF3682 /* GameID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GameID.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/GameID.swift; sourceTree = "<group>"; };
+		070FF875D1B56EF050E4D27F /* GuessSecretGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GuessSecretGame.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/GuessSecretGame.swift; sourceTree = "<group>"; };
+		34B90175EA7994F59BE9DB5E /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Player.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/Player.swift; sourceTree = "<group>"; };
+		9A53369F33E07F068168CBAE /* SecretCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SecretCode.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/SecretCode.swift; sourceTree = "<group>"; };
+		04F88FA4B40E810F82E9900B /* TicTacToeGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicTacToeGame.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/TicTacToeGame.swift; sourceTree = "<group>"; };
+		C53547FC20CF2C1895BB9C2E /* TurnBasedGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TurnBasedGame.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/TurnBasedGame.swift; sourceTree = "<group>"; };
+		77932AF3C86984D740CCAF86 /* CodeCrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeCrackerApp.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/CodeCrackerApp.swift; sourceTree = "<group>"; };
+		1C246A9485B77469F46C5F1E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/ContentView.swift; sourceTree = "<group>"; };
+		2F203DDBAE1121A3186C5607 /* TicTacToeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicTacToeView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/TicTacToeView.swift; sourceTree = "<group>"; };
+		187E6A0F23B9F7A08AD13340 /* Connect4View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Connect4View.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/Connect4View.swift; sourceTree = "<group>"; };
+		31D0A457B46B0918953094DC /* CodeCrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeCrackerView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/CodeCrackerView.swift; sourceTree = "<group>"; };
+		CFC6669E969A7617E94B730B /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Components.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/Components.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FEA96F47B541CD08C6A1E7A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DC73C0488591F1EAF295E094 = {
+			isa = PBXGroup;
+			children = (
+				8E9564EECD939AC7A63DD786 /* CodeCrackerKit */,
+				67DB4A58C8D4646E6AB1A8D8 /* CodeCrackerApp */,
+				7E57BEEEE44EFD0E914D6BCB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7E57BEEEE44EFD0E914D6BCB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F8ADA977F53FD5687BC63DFB /* CodeCracker.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8E9564EECD939AC7A63DD786 /* CodeCrackerKit */ = {
+			isa = PBXGroup;
+			children = (
+				6E9133D65C578DF45C11D999 /* Connect4Game.swift */,
+				4BB9D1B72F62FDD77C54358C /* GameError.swift */,
+				95C46AA3FF5834AF34CF3682 /* GameID.swift */,
+				070FF875D1B56EF050E4D27F /* GuessSecretGame.swift */,
+				34B90175EA7994F59BE9DB5E /* Player.swift */,
+				9A53369F33E07F068168CBAE /* SecretCode.swift */,
+				04F88FA4B40E810F82E9900B /* TicTacToeGame.swift */,
+				C53547FC20CF2C1895BB9C2E /* TurnBasedGame.swift */,
+			);
+			name = CodeCrackerKit;
+			sourceTree = "<group>";
+		};
+		67DB4A58C8D4646E6AB1A8D8 /* CodeCrackerApp */ = {
+			isa = PBXGroup;
+			children = (
+				77932AF3C86984D740CCAF86 /* CodeCrackerApp.swift */,
+				1C246A9485B77469F46C5F1E /* ContentView.swift */,
+				2F203DDBAE1121A3186C5607 /* TicTacToeView.swift */,
+				187E6A0F23B9F7A08AD13340 /* Connect4View.swift */,
+				31D0A457B46B0918953094DC /* CodeCrackerView.swift */,
+				CFC6669E969A7617E94B730B /* Components.swift */,
+			);
+			name = CodeCrackerApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		38772F7CB5C24AC041D5D804 /* CodeCracker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAA67390AD81C963986432C9 /* Build configuration list for PBXNativeTarget "CodeCracker" */;
+			buildPhases = (
+				EC4C6E7BF436C1622B3F50FC /* Sources */,
+				FEA96F47B541CD08C6A1E7A8 /* Frameworks */,
+				EBE7DEA7406D64E65262C72A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CodeCracker;
+			productName = CodeCracker;
+			productReference = F8ADA977F53FD5687BC63DFB /* CodeCracker.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		684F6FE30F5FFA83C7396127 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 2A41CB35AED5BD3567807B48 /* Build configuration list for PBXProject "CodeCracker" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DC73C0488591F1EAF295E094;
+			productRefGroup = 7E57BEEEE44EFD0E914D6BCB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				38772F7CB5C24AC041D5D804 /* CodeCracker */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EBE7DEA7406D64E65262C72A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EC4C6E7BF436C1622B3F50FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F36BB6B5AE31FA54B32AAAF /* Connect4Game.swift in Sources */,
+				8E91FD4F7A0B87A6BC365E72 /* GameError.swift in Sources */,
+				1F0BBD025BFFCAA6E1A36B06 /* GameID.swift in Sources */,
+				51EEBA73E7928B9A20FB9EFD /* GuessSecretGame.swift in Sources */,
+				95EEE0E41043025DE78BD956 /* Player.swift in Sources */,
+				57C399847E0C632C433F06FF /* SecretCode.swift in Sources */,
+				0BA818C939D9EFA3BD790B27 /* TicTacToeGame.swift in Sources */,
+				FF12B8ADE8A7B35B9909ADB3 /* TurnBasedGame.swift in Sources */,
+				AF7BCF08C339A4196EAEFA0B /* CodeCrackerApp.swift in Sources */,
+				2859DF2DDF332E5AC02CE025 /* ContentView.swift in Sources */,
+				F03524C782E495549E072FE6 /* TicTacToeView.swift in Sources */,
+				29C175FEACEBDCBF948B0D85 /* Connect4View.swift in Sources */,
+				556193CD929DB8709E6E9DED /* CodeCrackerView.swift in Sources */,
+				0697C6763E8E0773BC7E0ABD /* Components.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		40E1491E88051ACC4084C013 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		07785DB7FF06BC51D2E6155E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8280A8FDB5CEE4C56FB57DB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codecracker.app;
+				PRODUCT_NAME = CodeCracker;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0A9ABEC6D61555562286E02D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codecracker.app;
+				PRODUCT_NAME = CodeCracker;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A41CB35AED5BD3567807B48 /* Build configuration list for PBXProject "CodeCracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40E1491E88051ACC4084C013 /* Debug */,
+				07785DB7FF06BC51D2E6155E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAA67390AD81C963986432C9 /* Build configuration list for PBXNativeTarget "CodeCracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8280A8FDB5CEE4C56FB57DB9 /* Debug */,
+				0A9ABEC6D61555562286E02D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 684F6FE30F5FFA83C7396127 /* Project object */;
+}

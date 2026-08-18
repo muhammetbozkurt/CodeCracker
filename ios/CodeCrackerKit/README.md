@@ -1,0 +1,87 @@
+# CodeCrackerKit
+
+A Swift port of the CodeCracker game rules — the logic that lived in `games/` and
+`player/` in the Python project. No networking, no server, no UI: just the rules,
+so an iOS app can run a full game on-device (pass-and-play or against an AI).
+
+```swift
+var game = TicTacToeGame()
+let alice = Player(name: "Alice", role: Mark.x)
+let bob = Player(name: "Bob", role: Mark.o)
+try game.addPlayer(alice)
+try game.addPlayer(bob)
+
+switch try game.play(4, by: alice.id) {
+case .ongoing: break
+case .win(let id): print("\(game.player(id: id)?.name ?? "?") wins")
+case .draw: print("draw")
+}
+```
+
+## Layout
+
+| File | Ported from |
+| --- | --- |
+| `TurnBasedGame.swift` | `games/game.py` |
+| `GuessSecretGame.swift` | `games/guess_secret_game.py` |
+| `TicTacToeGame.swift` | `games/tictactoe_game.py` |
+| `Connect4Game.swift` | `games/connect4_game.py` |
+| `Player.swift` | `player/*.py` |
+| `SecretCode.swift` | `GuessSecretGame.is_valid_input` / `calculate_score` |
+| `GameError.swift` | `errors/*.py` |
+| `GameID.swift` | `utils.generate_custom_id` |
+
+Run the tests with `swift test` from this directory. All 37 cover the same
+ground as `test_games.py`, `test_tictactoe.py` and `test_connect4.py`, plus draws,
+diagonals, full columns, and code validation.
+
+## Deliberate differences from the Python version
+
+**Games are value types.** Each game is a `struct`, so copying it snapshots the
+state. Undo, replay and SwiftUI change-diffing come for free. The Python classes
+were reference types mutated in place.
+
+**One move channel instead of three.** Python's `_play` returned a `Player`, the
+string `"draw"`, or `None`. That is now `MoveOutcome.win(PlayerID) / .draw / .ongoing`.
+
+**Turn order is derived, not stored.** There is no `who_will_play` field; the
+current player is `players[turnHistory.count % 2]`. It cannot drift out of sync
+with the board.
+
+This fixes a real gap in the Python version: `GuessSecretGame._play` never
+advanced the turn at all — `main.py:269` did it, so the rules were only correct
+when driven by the server. Its turn check also read
+`if uuid != who_will_play and who_will_play`, which skipped the check entirely
+while `who_will_play` was `nil`. Since it was never set when the second player
+joined, *either* player could open, and a player could take two turns in a row.
+Here seat 0 always opens and turns alternate strictly, as in the other two games.
+
+**Invalid codes cannot be constructed.** `SecretCode.init?` is the only way to
+make one, so validity is checked once when parsing input rather than on every
+move. There is no `InputError` path for a malformed guess because a malformed
+guess is not representable.
+
+**Empty cells are `nil`, not `""`.** Boards are `[Mark?]` and `[Disc?]` instead
+of arrays of strings.
+
+**A rejected move changes nothing.** Python's `Game.play` bumped
+`last_played_at` before validating, so an illegal move still counted as activity.
+Timestamps now only advance on success. (This mattered only for the server's
+timeout reaper.)
+
+**`sid` and `game_id` are gone from `Player`.** Both were Socket.IO bookkeeping.
+
+**Board scanning is local.** Connect 4 checks the four directions through the
+disc just played rather than rescanning all 42 cells; it also returns the winning
+cells (`winningCells`, and `winningLine` for tic-tac-toe) so the UI can highlight
+them.
+
+**`GameStatus.waitingForSetup`** replaces the per-game status strings. The Python
+`get_status()` returned `"Waiting for players to set their secrets"`, which only
+made sense for CodeCracker; user-facing copy belongs in the app layer.
+
+## Not included
+
+Everything the server owned: matchmaking, rooms, reconnection, and the abandoned-game
+reaper (`utils.check_game_timeout`). Add an AI opponent and/or GameKit
+`GKTurnBasedMatch` on top of this package — neither needs a backend.
