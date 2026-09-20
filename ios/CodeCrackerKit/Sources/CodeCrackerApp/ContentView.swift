@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var appeared = false
+    @State private var mode: PlayMode = .passAndPlay
 
     var body: some View {
         NavigationStack {
@@ -11,6 +12,7 @@ struct ContentView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 26) {
                         header
+                        modePicker
                         tiles
                         footer
                     }
@@ -30,7 +32,7 @@ struct ContentView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
-            SectionLabel(text: "two players, one device")
+            SectionLabel(text: mode.sectionLabel)
 
             Text("CodeCracker")
                 .font(.system(size: 42, weight: .heavy, design: .rounded))
@@ -42,13 +44,23 @@ struct ContentView: View {
                     )
                 )
 
-            Text("Pick a game, pass the phone, settle it properly.")
+            Text(mode.blurb)
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(Color.textSecondary)
         }
         .padding(.top, 24)
         .opacity(appeared ? 1 : 0)
         .offset(y: appeared ? 0 : 12)
+    }
+
+    private var modePicker: some View {
+        Picker("How to play", selection: $mode) {
+            ForEach(PlayMode.allCases) { mode in
+                Text(mode.title).tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+        .opacity(appeared ? 1 : 0)
     }
 
     private var tiles: some View {
@@ -72,8 +84,8 @@ struct ContentView: View {
 
     private var footer: some View {
         HStack(spacing: 8) {
-            Image(systemName: "wifi.slash")
-            Text("No account, no server, no internet.")
+            Image(systemName: mode.footerIcon)
+            Text(mode.footerText)
         }
         .font(.system(.footnote, design: .rounded, weight: .medium))
         .foregroundStyle(Color.textTertiary)
@@ -83,10 +95,15 @@ struct ContentView: View {
 
     @ViewBuilder
     private func destination(for kind: GameKind) -> some View {
-        switch kind {
-        case .ticTacToe: TicTacToeView()
-        case .connect4: Connect4View()
-        case .codeCracker: CodeCrackerView()
+        switch mode {
+        case .passAndPlay:
+            switch kind {
+            case .ticTacToe: TicTacToeView()
+            case .connect4: Connect4View()
+            case .codeCracker: CodeCrackerView()
+            }
+        case .nearby:
+            LobbyView(kind: kind)
         }
     }
 }
@@ -121,5 +138,48 @@ private struct GameTile: View {
                 .stroke(Color.hairline, lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.4), radius: 18, y: 10)
+    }
+}
+
+/// Pass the phone, or play against a second device in the same room.
+enum PlayMode: String, CaseIterable, Identifiable {
+    case passAndPlay
+    case nearby
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .passAndPlay: "Pass & play"
+        case .nearby: "Nearby"
+        }
+    }
+
+    var sectionLabel: String {
+        switch self {
+        case .passAndPlay: "two players, one device"
+        case .nearby: "two players, two devices"
+        }
+    }
+
+    var blurb: String {
+        switch self {
+        case .passAndPlay: "Pick a game, pass the phone, settle it properly."
+        case .nearby: "Pick a game, then host or join from the device next to you."
+        }
+    }
+
+    var footerIcon: String {
+        switch self {
+        case .passAndPlay: "wifi.slash"
+        case .nearby: "antenna.radiowaves.left.and.right"
+        }
+    }
+
+    var footerText: String {
+        switch self {
+        case .passAndPlay: "No account, no server, no internet."
+        case .nearby: "Device to device. No account, no server, no internet."
+        }
     }
 }

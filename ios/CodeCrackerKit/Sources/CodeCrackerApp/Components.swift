@@ -798,3 +798,23 @@ struct GameThumbnail: View {
         }
     }
 }
+
+/// Nearby games only: says whether the board is waiting on you or on them.
+struct NetworkTurnHint: View {
+    let isMyTurn: Bool
+    let accent: Color
+
+    var body: some View {
+        HStack(spacing: 7) {
+            Image(systemName: isMyTurn ? "hand.tap.fill" : "hourglass")
+            Text(isMyTurn ? "Your move" : "Waiting for your opponent")
+        }
+        .font(.system(.footnote, design: .rounded, weight: .semibold))
+        .foregroundStyle(isMyTurn ? accent : Color.textTertiary)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 14)
+        .glassSurface(Capsule(), tint: isMyTurn ? accent : .clear)
+        .overlay(Capsule().stroke(Color.hairline, lineWidth: 1))
+        .animation(.easeInOut(duration: 0.2), value: isMyTurn)
+    }
+}

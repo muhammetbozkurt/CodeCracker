@@ -7,11 +7,17 @@ private enum Stage: Equatable {
     case names
     case handoff(seat: Int)
     case secret(seat: Int)
+    /// Nearby games only: your code is in, theirs isn't yet.
+    case waitingForOpponent
     case playing
 }
 
 struct CodeCrackerView: View {
-    @State private var game = GuessSecretGame()
+    /// `nil` for pass-and-play; otherwise the board lives on the session and is
+    /// mirrored to the other device.
+    var session: MultiplayerSession?
+
+    @State private var localGame = GuessSecretGame()
     @State private var firstName = ""
     @State private var secondName = ""
     @State private var entry = ""
@@ -22,23 +28,45 @@ struct CodeCrackerView: View {
 
     private let kind = GameKind.codeCracker
 
+    private var game: GuessSecretGame { session?.codeCracker ?? localGame }
+    private var displayError: String? { session?.errorMessage ?? errorMessage }
+    /// Over the network you only get to guess on your own turn — and not while
+    /// a guess is away being scored by the player who owns the code.
+    private var canMove: Bool { session.map { $0.isMyTurn && !$0.isAwaitingFeedback } ?? true }
+    private var mySeat: Int? {
+        guard let session else { return nil }
+        return game.players.firstIndex { $0.id == session.localPlayerID }
+    }
+
+    /// Nearby games skip names and hand-off entirely — each device is already
+    /// private to one player — so the stage follows the board instead of the
+    /// buttons the player pressed.
+    private var effectiveStage: Stage {
+        guard let session else { return stage }
+        guard let seat = mySeat else { return .waitingForOpponent }
+        if !game.hasChosenSecret(session.localPlayerID) { return .secret(seat: seat) }
+        return game.isReadyToPlay ? .playing : .waitingForOpponent
+    }
+
     var body: some View {
         GameShell(kind: kind) {
             ScrollView {
                 VStack(spacing: 18) {
-                    switch stage {
+                    switch effectiveStage {
                     case .names:
                         namesCard
                     case .handoff(let seat):
                         handoffCard(seat: seat)
                     case .secret(let seat):
                         secretCard(seat: seat)
+                    case .waitingForOpponent:
+                        waitingCard
                     case .playing:
                         playingScreen
                     }
                 }
                 .padding(.vertical, 16)
-                .animation(.spring(response: 0.45, dampingFraction: 0.85), value: stage)
+                .animation(.spring(response: 0.45, dampingFraction: 0.85), value: effectiveStage)
             }
             .scrollIndicators(.hidden)
         }
@@ -60,6 +88,35 @@ struct CodeCrackerView: View {
                 withAnimation(.easeInOut.delay(0.3)) { showResult = true }
             }
         }
+        .onChange(of: game.id) { _, _ in
+            // A rematch dealt by the host replaces the board underneath us.
+            entry = ""
+            errorMessage = nil
+            showResult = false
+            historySeat = mySeat ?? 0
+        }
+        .onAppear {
+            historySeat = mySeat ?? historySeat
+        }
+    }
+
+    // MARK: Waiting (nearby games)
+
+    private var waitingCard: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .controlSize(.large)
+                .tint(kind.accent)
+            Text("Code locked in")
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundStyle(.white)
+            Text("Waiting for \(session?.opponentName ?? "your opponent") to pick theirs.")
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(Color.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .glassCard(tint: kind.accent)
+        .frame(maxHeight: .infinity)
     }
 
     // MARK: Names
@@ -117,7 +174,7 @@ struct CodeCrackerView: View {
         var newGame = GuessSecretGame()
         _ = try? newGame.addPlayer(named: firstName.isEmpty ? "Player 1" : firstName)
         _ = try? newGame.addPlayer(named: secondName.isEmpty ? "Player 2" : secondName)
-        game = newGame
+        localGame = newGame
         entry = ""
         errorMessage = nil
         showResult = false
@@ -188,9 +245,19 @@ struct CodeCrackerView: View {
 
     private func setSecret(seat: Int) {
         guard game.players.indices.contains(seat) else { return }
+        if let session {
+            do {
+                session.submitSecret(try SecretCode(validating: entry))
+                entry = ""
+                errorMessage = nil
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            return
+        }
         do {
             let code = try SecretCode(validating: entry)
-            try game.setSecret(code, for: game.players[seat].id)
+            try localGame.setSecret(code, for: game.players[seat].id)
             entry = ""
             errorMessage = nil
             if seat == 0 {
@@ -210,12 +277,16 @@ struct CodeCrackerView: View {
         VStack(spacing: 16) {
             TurnBar(seats: seats, activeIndex: activeSeatIndex)
 
+            if session != nil {
+                NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
+            }
+
             if !game.isOver {
                 VStack(spacing: 14) {
                     CodeBoxes(digits: entry, accent: currentAccent)
                     Keypad(
                         accent: currentAccent,
-                        canSubmit: entry.count == SecretCode.length,
+                        canSubmit: entry.count == SecretCode.length && canMove,
                         submitLabel: "Submit guess",
                         onDigit: append,
                         onDelete: deleteDigit,
@@ -225,7 +296,7 @@ struct CodeCrackerView: View {
                 .glassCard(tint: currentAccent)
             }
 
-            ErrorLine(message: errorMessage)
+            ErrorLine(message: displayError)
 
             historyCard
 
@@ -329,9 +400,20 @@ struct CodeCrackerView: View {
 
     private func submitGuess() {
         guard let turn = game.currentPlayerID else { return }
+        if let session {
+            do {
+                session.submit(.guess(try SecretCode(validating: entry)))
+                entry = ""
+                errorMessage = nil
+                historySeat = mySeat ?? historySeat
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            return
+        }
         do {
             let code = try SecretCode(validating: entry)
-            try game.play(code, by: turn)
+            try localGame.play(code, by: turn)
             entry = ""
             errorMessage = nil
             // Show the guesser their own board after they move.
@@ -345,11 +427,22 @@ struct CodeCrackerView: View {
 
     private func playAgain() {
         showResult = false
-        beginSetup()
+        if session != nil {
+            reset()
+        } else {
+            beginSetup()
+        }
     }
 
     private func reset() {
-        game = GuessSecretGame()
+        if let session {
+            session.requestRematch()
+            entry = ""
+            errorMessage = nil
+            showResult = false
+            return
+        }
+        localGame = GuessSecretGame()
         firstName = ""
         secondName = ""
         entry = ""
@@ -369,6 +462,16 @@ struct CodeCrackerView: View {
 
     private var resultDetail: String {
         let guesses = visibleTurns.count
-        return "Code broken in \(guesses) guess\(guesses == 1 ? "" : "es")."
+        var detail = "Code broken in \(guesses) guess\(guesses == 1 ? "" : "es")."
+
+        if let session {
+            if session.opponentCheated {
+                detail += " Their reveal didn't match what they committed to — that code moved during the game."
+            } else if let revealed = session.revealedOpponentCode {
+                detail += " Their code was \(revealed)."
+            }
+        }
+
+        return detail
     }
 }

@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 
 @testable import CodeCrackerKit
@@ -139,5 +140,83 @@ struct GuessSecretGameTests {
         #expect(throws: GameError.gameIsAlreadyOver) {
             try game.play(code("1234"), by: player2ID)
         }
+    }
+}
+
+/// The nearby-multiplayer path: one side holds the code, the other only a
+/// commitment to it, and the owner scores every guess made against it.
+@Suite("GuessSecretGame over the wire")
+struct GuessSecretCommitmentTests {
+    @Test("a committed secret settles a seat without revealing the code")
+    func commitmentSettlesASeat() throws {
+        var game = try makeGuessSecretGame()
+        try game.setSecret(code("1234"), for: player1ID)
+        #expect(!game.isReadyToPlay)
+
+        try game.commitSecret(Data("digest".utf8), for: player2ID)
+        #expect(game.isReadyToPlay)
+        #expect(game.hasSettledSecret(player2ID))
+        // The point of the exercise: the code itself is not here.
+        #expect(!game.hasChosenSecret(player2ID))
+        #expect(game.player(id: player2ID)?.role == nil)
+    }
+
+    @Test("a seat can be settled once, either way")
+    func commitmentIsWriteOnce() throws {
+        var game = try makeGuessSecretGame()
+        try game.commitSecret(Data("digest".utf8), for: player1ID)
+
+        #expect(throws: GameError.secretAlreadySet) {
+            try game.commitSecret(Data("another".utf8), for: player1ID)
+        }
+        #expect(throws: GameError.secretAlreadySet) {
+            try game.setSecret(try code("1234"), for: player1ID)
+        }
+    }
+
+    @Test("a recorded guess takes the turn like a played one")
+    func recordAdvancesTheTurn() throws {
+        var game = try makeGuessSecretGame()
+        try game.setSecret(code("1234"), for: player1ID)
+        try game.commitSecret(Data("digest".utf8), for: player2ID)
+
+        try game.record(code("5678"), scoredAs: Feedback(correctPositions: 1, correctDigits: 0), by: player1ID)
+        #expect(game.turnHistory.count == 1)
+        #expect(game.currentPlayerID == player2ID)
+        #expect(!game.isOver)
+
+        // Player 2 guesses against the code held here, so the rules score it.
+        try game.play(code("1234"), by: player2ID)
+        #expect(game.winner?.id == player2ID)
+    }
+
+    @Test("a recorded guess obeys turn order and a finished game")
+    func recordIsGuarded() throws {
+        var game = try makeGuessSecretGame()
+        try game.setSecret(code("1234"), for: player1ID)
+        try game.commitSecret(Data("digest".utf8), for: player2ID)
+
+        #expect(throws: GameError.notYourTurn) {
+            try game.record(try code("5678"), scoredAs: Feedback(correctPositions: 0, correctDigits: 0), by: player2ID)
+        }
+
+        try game.record(code("5678"), scoredAs: Feedback(correctPositions: 4, correctDigits: 0), by: player1ID)
+        #expect(game.winner?.id == player1ID)
+        #expect(throws: GameError.gameIsAlreadyOver) {
+            try game.record(try code("9012"), scoredAs: Feedback(correctPositions: 0, correctDigits: 0), by: player2ID)
+        }
+    }
+
+    @Test("a reveal that contradicts the feedback given is caught")
+    func inconsistentFeedbackIsCaught() throws {
+        var game = try makeGuessSecretGame()
+        try game.setSecret(code("1234"), for: player1ID)
+        try game.commitSecret(Data("digest".utf8), for: player2ID)
+
+        // "5678" against "5678" would be four exact; player 2 answered zero.
+        try game.record(code("5678"), scoredAs: Feedback(correctPositions: 0, correctDigits: 0), by: player1ID)
+
+        #expect(!game.feedbackIsConsistent(with: try code("5678"), guessedBy: player1ID))
+        #expect(game.feedbackIsConsistent(with: try code("9012"), guessedBy: player1ID))
     }
 }

@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct TicTacToeView: View {
-    @State private var game = TicTacToeGame()
+    /// `nil` for pass-and-play; otherwise the board lives on the session and is
+    /// mirrored to the other device.
+    var session: MultiplayerSession?
+
+    @State private var localGame = TicTacToeGame()
     @State private var playerXName = ""
     @State private var playerOName = ""
     @State private var started = false
@@ -10,10 +14,18 @@ struct TicTacToeView: View {
 
     private let kind = GameKind.ticTacToe
 
+    private var game: TicTacToeGame { session?.ticTacToe ?? localGame }
+    /// A networked game is already set up by the time this view appears.
+    private var isPlaying: Bool { session != nil || started }
+    private var displayError: String? { session?.errorMessage ?? errorMessage }
+    /// Pass-and-play lets whoever holds the phone move; over the network you
+    /// only get to touch the board on your own turn.
+    private var canMove: Bool { session.map(\.isMyTurn) ?? true }
+
     var body: some View {
         GameShell(kind: kind) {
             VStack(spacing: 22) {
-                if started {
+                if isPlaying {
                     boardScreen
                 } else {
                     SetupCard(
@@ -52,10 +64,15 @@ struct TicTacToeView: View {
     // MARK: Setup
 
     private func startGame() {
+        if let session {
+            session.requestRematch()
+            showResult = false
+            return
+        }
         var newGame = TicTacToeGame()
         try? newGame.addPlayer(Player(name: playerXName.isEmpty ? "Player X" : playerXName, role: .x))
         try? newGame.addPlayer(Player(name: playerOName.isEmpty ? "Player O" : playerOName, role: .o))
-        game = newGame
+        localGame = newGame
         errorMessage = nil
         showResult = false
         started = true
@@ -72,13 +89,21 @@ struct TicTacToeView: View {
         VStack(spacing: 20) {
             TurnBar(seats: seats, activeIndex: activeSeatIndex)
 
+            if session != nil {
+                NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
+            }
+
             board
 
-            ErrorLine(message: errorMessage)
+            ErrorLine(message: displayError)
 
             if game.isOver {
                 SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
-                    started = false
+                    if let session {
+                        session.requestRematch()
+                    } else {
+                        started = false
+                    }
                     errorMessage = nil
                 }
             }
@@ -136,14 +161,18 @@ struct TicTacToeView: View {
             .aspectRatio(1, contentMode: .fit)
         }
         .buttonStyle(PressableStyle(scale: 0.93))
-        .disabled(game.isOver || !game.canPlay(cell))
+        .disabled(game.isOver || !game.canPlay(cell) || !canMove)
         .animation(.spring(response: 0.32, dampingFraction: 0.62), value: mark)
     }
 
     private func play(_ cell: Int) {
+        if let session {
+            session.submit(.cell(cell))
+            return
+        }
         guard let turn = game.currentPlayerID else { return }
         do {
-            try game.play(cell, by: turn)
+            try localGame.play(cell, by: turn)
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription

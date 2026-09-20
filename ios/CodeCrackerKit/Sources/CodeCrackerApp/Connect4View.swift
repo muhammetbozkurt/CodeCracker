@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct Connect4View: View {
-    @State private var game = Connect4Game()
+    /// `nil` for pass-and-play; otherwise the board lives on the session and is
+    /// mirrored to the other device.
+    var session: MultiplayerSession?
+
+    @State private var localGame = Connect4Game()
     @State private var redName = ""
     @State private var yellowName = ""
     @State private var started = false
@@ -11,6 +15,13 @@ struct Connect4View: View {
     @State private var fallOffset: CGFloat = 0
 
     private let kind = GameKind.connect4
+
+    private var game: Connect4Game { session?.connect4 ?? localGame }
+    /// A networked game is already set up by the time this view appears.
+    private var isPlaying: Bool { session != nil || started }
+    private var displayError: String? { session?.errorMessage ?? errorMessage }
+    /// Over the network you only get to touch the board on your own turn.
+    private var canMove: Bool { session.map(\.isMyTurn) ?? true }
     private let spacing: CGFloat = 6
     private let framePadding: CGFloat = 10
 
@@ -23,20 +34,27 @@ struct Connect4View: View {
 
     var body: some View {
         GameShell(kind: kind) {
-            if started {
+            if isPlaying {
                 GeometryReader { proxy in
                     let cell = cellSize(in: proxy.size)
                     VStack(spacing: 16) {
                         TurnBar(seats: seats, activeIndex: activeSeatIndex)
+                        if session != nil {
+                            NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
+                        }
                         // Capped: the board should settle just under the turn
                         // bar, not float in the middle of the screen.
                         Spacer(minLength: 0).frame(maxHeight: 28)
                         dropRow(cell: cell)
                         board(cell: cell)
-                        ErrorLine(message: errorMessage)
+                        ErrorLine(message: displayError)
                         if game.isOver {
                             SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
-                                started = false
+                                if let session {
+                                    session.requestRematch()
+                                } else {
+                                    started = false
+                                }
                                 errorMessage = nil
                             }
                         }
@@ -197,10 +215,16 @@ struct Connect4View: View {
     // MARK: Moves
 
     private func startGame() {
+        if let session {
+            session.requestRematch()
+            showResult = false
+            falling = nil
+            return
+        }
         var newGame = Connect4Game()
         try? newGame.addPlayer(Player(name: redName.isEmpty ? "Red" : redName, role: .red))
         try? newGame.addPlayer(Player(name: yellowName.isEmpty ? "Yellow" : yellowName, role: .yellow))
-        game = newGame
+        localGame = newGame
         errorMessage = nil
         falling = nil
         showResult = false
@@ -213,15 +237,27 @@ struct Connect4View: View {
     }
 
     private func drop(_ column: Int, cell: CGFloat) {
-        guard !game.isOver, let turn = game.currentPlayerID else { return }
+        guard !game.isOver, canMove, let turn = game.currentPlayerID else { return }
         guard let disc = game.player(id: turn)?.role else { return }
         guard let landingRow = game.landingRow(inColumn: column) else {
             errorMessage = GameError.columnIsFull.localizedDescription
             return
         }
 
+        if let session {
+            // The session reports rejections through `errorMessage`, so animate
+            // only if the move actually landed. A disc dropped on the other
+            // device simply appears — the fall is a local flourish.
+            let before = game.turnHistory.count
+            session.submit(.column(column))
+            if game.turnHistory.count > before {
+                animateDrop(column: column, row: landingRow, disc: disc, cell: cell)
+            }
+            return
+        }
+
         do {
-            try game.play(column, by: turn)
+            try localGame.play(column, by: turn)
             errorMessage = nil
             animateDrop(column: column, row: landingRow, disc: disc, cell: cell)
         } catch {

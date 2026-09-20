@@ -10,7 +10,8 @@ Tic-Tac-Toe, Connect 4) live side by side:
 - **Root** — a Python FastAPI + Socket.IO server with a vanilla-JS web frontend. Two players
   over a network, all state in server memory.
 - **`ios/`** — `CodeCrackerKit`, a Swift port of just the *rules*, plus a SwiftUI app and a CLI
-  harness. No networking, no server: on-device pass-and-play. Not yet committed to git.
+  harness. No server: games run on-device, either pass-and-play or between two nearby devices
+  over MultipeerConnectivity.
 
 The Swift port deliberately diverges from the Python semantics. `ios/CodeCrackerKit/README.md`
 enumerates every difference and why — **read it before changing either side**, and update it when
@@ -119,3 +120,68 @@ Key invariants that differ from Python and should be preserved:
 
 Rules changes belong in `CodeCrackerKit` and its tests, not in the views or the CLI — both are
 pure drivers.
+
+### Nearby multiplayer
+
+Device-to-device play lives entirely in the **app** target (`Sources/CodeCrackerApp/`), never in
+the kit — the kit keeps its no-dependency, rules-only remit:
+
+- `MultipeerTransport.swift` — `MCSession`/advertiser/browser behind a `Data` in/out interface,
+  surfacing `TransportEvent`s on an `AsyncStream`. MultipeerConnectivity's types predate
+  `Sendable`, so `MCPeerID` never leaves the class; callers hold a `PeerHandle` token instead.
+- `NetMessage.swift` — the `Codable` wire protocol.
+- `MultiplayerSession.swift` — `@MainActor @Observable`; owns the transport, the seat
+  assignment, and this device's `Board` (one of the three games).
+- `LobbyView.swift` — host/join UI; hands off to the game view once seats are dealt.
+
+**How it stays in sync:** state is never transmitted, only moves. Both devices build the same
+game from the host's `.start` seating and replay every move — local or remote — through the same
+`play(_:by:)` the pass-and-play path uses. That works because turn order is derived from
+`turnHistory.count` and `applyMove` is deterministic. `.move` carries the sender's pre-move
+`turnHistory.count` as `seq`; a receiver whose count disagrees ends the game as desynced rather
+than applying it.
+
+CodeCracker is the exception, because a guess cannot be scored by the device that makes it — see
+the trust model below. The guesser sends `.move` and waits; the owner of the code scores it with
+the ordinary `play(_:by:)` (its own secret is right there), returns `.feedback`, and only then
+does the guesser write the turn with `GuessSecretGame.record(_:scoredAs:by:)`. So a guesser's
+turn advances on the answer, not on the send, and `MultiplayerSession.isAwaitingFeedback` locks
+the keypad in between.
+
+The host deals seats (seat 0 opens, and takes X / red) and is the only side that starts a
+rematch — a guest's "New game" sends `.rematch` and waits for the host's fresh `.start`.
+Invitations are **not** auto-accepted: the transport parks the `invitationHandler`, raises
+`.invitationReceived`, and the host's player answers in the lobby. A second invitation while one
+is pending, or after a peer is seated, is declined outright.
+
+**Treat the peer as hostile.** The payload's `playerID` is a claim, so `receive(_:from:)` drops
+anything from a peer other than the seated opponent and refuses any message acting for a seat
+that peer does not own — otherwise the opponent can move as you, or set your CodeCracker secret
+before you pick one (`setSecret` is write-once, so first writer wins). `.hello` is honoured only
+during the handshake, `.start` only while handshaking or once the board `isOver`, and `.rematch`
+only once the board `isOver`; without those gates any of the three re-deals a game in progress.
+A refused message ends the session rather than being ignored, since the alternative is two
+devices that silently disagree.
+
+**Trust model:** a CodeCracker code never leaves the device that chose it. Sending it would hand
+the game away — the opponent's client only has to print it. Instead each side commits: at setup
+it sends `.commit` with `SHA256(salt ‖ digits)` (the salt is what hides four guessable digits;
+the hash is what stops a code quietly changing when a guess gets close), and the kit stores that
+opaque `Data` in `GuessSecretGame.commitments` without ever learning the code. A seat counts as
+settled — `isReadyToPlay` — with either a chosen secret or a commitment.
+
+Once the game ends both sides send `.reveal` with the code and salt, and each checks the other's
+two ways: the digest must match what was committed, and `feedbackIsConsistent(with:guessedBy:)`
+must re-score every guess it made to the answers it was given. Either check failing sets
+`opponentCheated`, which the result copy states plainly. This is what makes the scoring
+trustworthy — without the commitment, the side holding the code could simply answer "nothing
+right" forever.
+
+Each game view takes an optional `MultiplayerSession`. With one it reads the board from the
+session, gates input on `isMyTurn`, and routes moves through `submit(_:)`; with `nil` it keeps
+its own `@State` game and behaves exactly as before. `Info.plist` (merged into the generated
+one via `INFOPLIST_FILE`) carries `NSLocalNetworkUsageDescription` and the `NSBonjourServices`
+entries for `_codecracker._tcp`/`._udp` — without those, discovery silently finds nothing.
+
+Two Simulators on one Mac do discover and connect, though the DTLS layer logs `No route to
+host` noise on the way; two physical devices are the real test.
