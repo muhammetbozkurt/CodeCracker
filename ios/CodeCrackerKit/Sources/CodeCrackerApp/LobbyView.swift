@@ -163,7 +163,7 @@ struct LobbyView: View {
                     session.invite(peer)
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "iphone.gen3")
+                        Image(systemName: "ipad.and.iphone")
                             .foregroundStyle(kind.accent)
                         Text(peer.displayName)
                             .font(.system(.body, design: .rounded, weight: .semibold))

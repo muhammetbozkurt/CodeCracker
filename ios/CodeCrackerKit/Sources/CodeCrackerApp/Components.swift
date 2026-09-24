@@ -444,6 +444,8 @@ struct WinOverlay: View {
                 }
             }
             .glassCard(tint: accent)
+            // A card-sized card on iPad, not a banner across the screen.
+            .frame(maxWidth: 480)
             .padding(32)
             .scaleEffect(appeared ? 1 : 0.85)
             .opacity(appeared ? 1 : 0)
@@ -501,18 +503,34 @@ struct ConfettiView: View {
 /// Background, title and consistent padding for a game screen.
 struct GameShell<Content: View>: View {
     let kind: GameKind
+    /// Scrolling screens get their `ScrollView` from here, full width, so
+    /// card shadows aren't clipped at the column's edges.
+    var scrolls = false
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         ZStack {
             AuroraBackground(tint: kind.accent, secondary: kind.secondaryAccent)
-            content()
-                .padding(.horizontal, 20)
+            if scrolls {
+                ScrollView { column }
+                    .scrollIndicators(.hidden)
+            } else {
+                column
+            }
         }
         .navigationTitle(kind.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+    }
+
+    private var column: some View {
+        content()
+            .padding(.horizontal, 20)
+            // A phone-width column on iPad, rather than cards stretched
+            // edge to edge.
+            .frame(maxWidth: 560)
+            .frame(maxWidth: .infinity)
     }
 }
 

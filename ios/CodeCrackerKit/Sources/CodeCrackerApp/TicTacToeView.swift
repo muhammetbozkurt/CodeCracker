@@ -86,31 +86,46 @@ struct TicTacToeView: View {
     // MARK: Board
 
     private var boardScreen: some View {
-        VStack(spacing: 20) {
-            TurnBar(seats: seats, activeIndex: activeSeatIndex)
+        GeometryReader { proxy in
+            VStack(spacing: 20) {
+                TurnBar(seats: seats, activeIndex: activeSeatIndex)
 
-            if session != nil {
-                NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
-            }
-
-            board
-
-            ErrorLine(message: displayError)
-
-            if game.isOver {
-                SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
-                    if let session {
-                        session.requestRematch()
-                    } else {
-                        started = false
-                    }
-                    errorMessage = nil
+                if session != nil {
+                    NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
                 }
-            }
 
-            Spacer(minLength: 0)
+                board
+                    .frame(maxWidth: boardSide(in: proxy.size))
+
+                ErrorLine(message: displayError)
+
+                if game.isOver {
+                    SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
+                        if let session {
+                            session.requestRematch()
+                        } else {
+                            started = false
+                        }
+                        errorMessage = nil
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(.top, 12)
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
         }
-        .padding(.top, 12)
+    }
+
+    /// Room kept below and above the board for the turn bar, hint, error line
+    /// and "New game" button, so a short window shrinks the board instead of
+    /// pushing the button off screen.
+    private let reservedHeight: CGFloat = 250
+
+    /// The board is square, so it takes whichever runs out first: the width,
+    /// or the height left once everything around it has its room.
+    private func boardSide(in size: CGSize) -> CGFloat {
+        max(180, min(size.width, size.height - reservedHeight))
     }
 
     private var seats: [TurnBar.Seat] {

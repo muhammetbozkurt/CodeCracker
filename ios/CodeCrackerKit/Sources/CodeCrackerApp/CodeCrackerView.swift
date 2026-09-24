@@ -49,26 +49,23 @@ struct CodeCrackerView: View {
     }
 
     var body: some View {
-        GameShell(kind: kind) {
-            ScrollView {
-                VStack(spacing: 18) {
-                    switch effectiveStage {
-                    case .names:
-                        namesCard
-                    case .handoff(let seat):
-                        handoffCard(seat: seat)
-                    case .secret(let seat):
-                        secretCard(seat: seat)
-                    case .waitingForOpponent:
-                        waitingCard
-                    case .playing:
-                        playingScreen
-                    }
+        GameShell(kind: kind, scrolls: true) {
+            VStack(spacing: 18) {
+                switch effectiveStage {
+                case .names:
+                    namesCard
+                case .handoff(let seat):
+                    handoffCard(seat: seat)
+                case .secret(let seat):
+                    secretCard(seat: seat)
+                case .waitingForOpponent:
+                    waitingCard
+                case .playing:
+                    playingScreen
                 }
-                .padding(.vertical, 16)
-                .animation(.spring(response: 0.45, dampingFraction: 0.85), value: effectiveStage)
             }
-            .scrollIndicators(.hidden)
+            .padding(.vertical, 16)
+            .animation(.spring(response: 0.45, dampingFraction: 0.85), value: effectiveStage)
         }
         .overlay {
             if showResult {
@@ -193,7 +190,7 @@ struct CodeCrackerView: View {
                 .glow(kind.accent, radius: 18)
 
             VStack(spacing: 6) {
-                Text("Pass the phone to \(name)")
+                Text("Pass the device to \(name)")
                     .font(.system(.title3, design: .rounded, weight: .bold))
                     .foregroundStyle(.white)
                     .multilineTextAlignment(.center)

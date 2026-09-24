@@ -17,6 +17,10 @@ struct ContentView: View {
                         footer
                     }
                     .padding(.horizontal, 20)
+                    // Same column as GameShell, so the tiles line up with
+                    // the games they open.
+                    .frame(maxWidth: 560)
+                    .frame(maxWidth: .infinity)
                     .padding(.top, 8)
                     .padding(.bottom, 32)
                 }
@@ -164,7 +168,7 @@ enum PlayMode: String, CaseIterable, Identifiable {
 
     var blurb: String {
         switch self {
-        case .passAndPlay: "Pick a game, pass the phone, settle it properly."
+        case .passAndPlay: "Pick a game, pass the device, settle it properly."
         case .nearby: "Pick a game, then host or join from the device next to you."
         }
     }
