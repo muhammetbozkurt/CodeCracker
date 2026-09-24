@@ -236,6 +236,12 @@ final class MultiplayerSession {
             pendingInvitation = nil
             if peer == opponentPeer { opponentPeer = nil }
             if case .ended = phase { return }
+            // A guest still in `.connecting` never got a game: the host turned
+            // it away, never answered, or the link failed while setting up.
+            if role == .guest, phase == .connecting {
+                phase = .ended(reason: "Couldn't join \(peer.displayName). They may have declined, or not answered in time.")
+                return
+            }
             phase = .ended(reason: "\(opponentName ?? "The other player") left the game.")
 
         case .received(let data, let peer):
