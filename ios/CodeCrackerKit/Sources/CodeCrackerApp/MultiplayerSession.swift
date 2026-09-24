@@ -225,6 +225,9 @@ final class MultiplayerSession {
             }
             pendingInvitation = peer
 
+        case .invitationExpired(let peer):
+            if pendingInvitation == peer { pendingInvitation = nil }
+
         case .connected(let peer):
             pendingInvitation = nil
             opponentPeer = peer
@@ -236,6 +239,9 @@ final class MultiplayerSession {
             pendingInvitation = nil
             if peer == opponentPeer { opponentPeer = nil }
             if case .ended = phase { return }
+            // A host still in `.connecting` has nobody seated, so a guest who
+            // never got in dropping away is no reason to close the lobby.
+            if role == .host, phase == .connecting { return }
             // A guest still in `.connecting` never got a game: the host turned
             // it away, never answered, or the link failed while setting up.
             if role == .guest, phase == .connecting {

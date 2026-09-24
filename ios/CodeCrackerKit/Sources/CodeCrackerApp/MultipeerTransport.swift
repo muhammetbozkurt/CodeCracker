@@ -16,6 +16,8 @@ enum TransportEvent: Sendable {
     /// Host side: somebody wants the second seat. Nothing happens until the
     /// player answers through `respond(to:accept:)`.
     case invitationReceived(PeerHandle)
+    /// Host side: the guest's invitation ran out before the player answered.
+    case invitationExpired(PeerHandle)
     case connected(PeerHandle)
     case disconnected(PeerHandle)
     case received(Data, from: PeerHandle)
@@ -54,8 +56,14 @@ final class MultipeerTransport: NSObject, @unchecked Sendable {
     /// MultipeerConnectivity hands over a non-`Sendable` completion. It is only
     /// ever stored and called under `lock`, never copied elsewhere.
     private struct InvitationBox: @unchecked Sendable {
+        let id = UUID()
         let respond: (Bool, MCSession?) -> Void
     }
+
+    /// How long a guest waits for an answer. The host drops its copy of the
+    /// invitation at the same point, so a prompt nobody is waiting on can't
+    /// hang around and block the next guest.
+    private static let invitationTimeout: TimeInterval = 20
 
     init(displayName: String, room: String) {
         let stream = AsyncStream.makeStream(of: TransportEvent.self)
@@ -90,13 +98,25 @@ final class MultipeerTransport: NSObject, @unchecked Sendable {
 
     func invite(_ handle: PeerHandle) {
         guard let peer = peer(for: handle) else { return }
-        browser?.invitePeer(peer, to: session, withContext: nil, timeout: 20)
+        browser?.invitePeer(peer, to: session, withContext: nil, timeout: Self.invitationTimeout)
     }
 
     /// Host side: answer an invitation the player was actually asked about.
     func respond(to handle: PeerHandle, accept: Bool) {
         let pending = lock.withLock { pendingInvitations.removeValue(forKey: handle) }
         pending?.respond(accept, accept ? session : nil)
+    }
+
+    /// Only the invitation this timer was started for: if the same guest has
+    /// asked again since, that newer one keeps its full time.
+    private func expire(_ handle: PeerHandle, id: UUID) {
+        let expired: InvitationBox? = lock.withLock {
+            guard pendingInvitations[handle]?.id == id else { return nil }
+            return pendingInvitations.removeValue(forKey: handle)
+        }
+        guard let expired else { return }
+        expired.respond(false, nil)
+        continuation.yield(.invitationExpired(handle))
     }
 
     func stop() {
@@ -206,14 +226,18 @@ extension MultipeerTransport: MCNearbyServiceAdvertiserDelegate {
         // Two seats only, and the player decides who takes the second one.
         // Auto-accepting hands the game to whoever is in radio range first.
         let handle = handle(for: peerID)
+        let box = InvitationBox(respond: invitationHandler)
         let queued: Bool = lock.withLock {
             guard session.connectedPeers.isEmpty, pendingInvitations.isEmpty else { return false }
-            pendingInvitations[handle] = InvitationBox(respond: invitationHandler)
+            pendingInvitations[handle] = box
             return true
         }
 
         if queued {
             continuation.yield(.invitationReceived(handle))
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.invitationTimeout) { [weak self] in
+                self?.expire(handle, id: box.id)
+            }
         } else {
             invitationHandler(false, nil)
         }
