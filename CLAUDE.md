@@ -154,12 +154,19 @@ Invitations are **not** auto-accepted: the transport parks the `invitationHandle
 `.invitationReceived`, and the host's player answers in the lobby. A second invitation while one
 is pending, or after a peer is seated, is declined outright.
 
+Every game shares the one `codecracker` service type, so the transport is given a `room` (the
+`GameKind` raw value): hosts advertise it as `discoveryInfo`, and a guest lists only hosts in its
+own room. Without it, a Tic-Tac-Toe guest sees Connect 4 hosts, and joining one leaves both
+devices waiting on each other.
+
 **Treat the peer as hostile.** The payload's `playerID` is a claim, so `receive(_:from:)` drops
 anything from a peer other than the seated opponent and refuses any message acting for a seat
 that peer does not own — otherwise the opponent can move as you, or set your CodeCracker secret
 before you pick one (`setSecret` is write-once, so first writer wins). `.hello` is honoured only
 during the handshake, `.start` only while handshaking or once the board `isOver`, and `.rematch`
 only once the board `isOver`; without those gates any of the three re-deals a game in progress.
+The room is only what the host chose to advertise, so a `.start` for a different game is refused
+as well.
 A refused message ends the session rather than being ignored, since the alternative is two
 devices that silently disagree.
 

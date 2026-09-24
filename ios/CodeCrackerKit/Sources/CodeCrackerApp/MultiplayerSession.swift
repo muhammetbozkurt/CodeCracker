@@ -106,7 +106,7 @@ final class MultiplayerSession {
         self.localName = localName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             ? (role == .host ? "Host" : "Guest")
             : localName
-        transport = MultipeerTransport(displayName: self.localName)
+        transport = MultipeerTransport(displayName: self.localName, room: kind.rawValue)
 
         let events = transport.events
         listener = Task { [weak self] in
@@ -269,7 +269,10 @@ final class MultiplayerSession {
         case .start(let kind, let gameID, let seats):
             // Guest side: adopt the host's seating verbatim, but only while
             // setting up or replacing a game that has actually finished.
-            guard role == .guest, kind == self.kind, seats.count == 2 else { return }
+            guard role == .guest, seats.count == 2 else { return }
+            // Discovery already filters by game, but only on what the host
+            // advertised. Waiting here would leave both devices stuck.
+            guard kind == self.kind else { return refuse() }
             guard phase == .handshaking || board?.isOver == true else { return }
             localPlayerID = seats[1].playerID
             remotePlayerID = seats[0].playerID

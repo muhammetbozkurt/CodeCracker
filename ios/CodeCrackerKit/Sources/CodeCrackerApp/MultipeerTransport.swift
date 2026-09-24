@@ -46,18 +46,24 @@ final class MultipeerTransport: NSObject, @unchecked Sendable {
     private var discovered: [MCPeerID] = []
     private var pendingInvitations: [PeerHandle: InvitationBox] = [:]
 
+    /// Hosts advertise it and browsers list only hosts in the same room, so a
+    /// guest looking for one game never sees hosts of another. Opaque here.
+    private let room: String
+    private static let roomKey = "room"
+
     /// MultipeerConnectivity hands over a non-`Sendable` completion. It is only
     /// ever stored and called under `lock`, never copied elsewhere.
     private struct InvitationBox: @unchecked Sendable {
         let respond: (Bool, MCSession?) -> Void
     }
 
-    init(displayName: String) {
+    init(displayName: String, room: String) {
         let stream = AsyncStream.makeStream(of: TransportEvent.self)
         events = stream.stream
         continuation = stream.continuation
         localPeer = MCPeerID(displayName: Self.sanitize(displayName))
         session = MCSession(peer: localPeer, securityIdentity: nil, encryptionPreference: .required)
+        self.room = room
         super.init()
         session.delegate = self
     }
@@ -68,7 +74,7 @@ final class MultipeerTransport: NSObject, @unchecked Sendable {
 
     func startHosting() {
         let advertiser = MCNearbyServiceAdvertiser(
-            peer: localPeer, discoveryInfo: nil, serviceType: Self.serviceType
+            peer: localPeer, discoveryInfo: [Self.roomKey: room], serviceType: Self.serviceType
         )
         advertiser.delegate = self
         advertiser.startAdvertisingPeer()
@@ -213,6 +219,9 @@ extension MultipeerTransport: MCNearbyServiceAdvertiserDelegate {
 
 extension MultipeerTransport: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
+        // Every game shares one service type; the room is what keeps a
+        // Connect 4 guest from seeing Tic-Tac-Toe hosts.
+        guard info?[Self.roomKey] == room else { return }
         lock.withLock {
             if !discovered.contains(peerID) { discovered.append(peerID) }
         }
