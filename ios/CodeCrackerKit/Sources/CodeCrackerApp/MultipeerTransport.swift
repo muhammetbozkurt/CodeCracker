@@ -156,10 +156,19 @@ final class MultipeerTransport: NSObject, @unchecked Sendable {
 
     private static func sanitize(_ name: String) -> String {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return "Player" }
-        // MCPeerID rejects display names longer than 63 UTF-8 bytes.
-        return String(trimmed.prefix(60))
+        // MCPeerID rejects display names longer than 63 UTF-8 bytes, and it
+        // rejects them by raising an Objective-C exception, which crashes. So
+        // count bytes, not characters, and stop only between whole characters
+        // so an emoji or a letter like "ğ" is never cut in half.
+        var result = ""
+        for character in trimmed {
+            guard result.utf8.count + character.utf8.count <= maxDisplayNameBytes else { break }
+            result.append(character)
+        }
+        return result.isEmpty ? "Player" : result
     }
+
+    private static let maxDisplayNameBytes = 63
 }
 
 // MARK: - MCSessionDelegate
