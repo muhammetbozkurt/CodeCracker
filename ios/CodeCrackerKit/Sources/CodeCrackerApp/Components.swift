@@ -728,21 +728,37 @@ struct Keypad: View {
 }
 
 /// Feedback for one guess: filled pegs for exact digits, hollow for misplaced.
+/// How close a guess came, as two counts. Not four pegs: a row of four beside
+/// a four-digit guess reads as one peg per digit, so "1234 ●○··" looked like
+/// "1 is right, 2 is misplaced" when feedback never says which digits matched.
 struct FeedbackPegs: View {
     let feedback: Feedback
 
     var body: some View {
-        HStack(spacing: 5) {
-            ForEach(0..<SecretCode.length, id: \.self) { index in
-                if index < feedback.correctPositions {
-                    Circle().fill(Color.codeMint).frame(width: 9, height: 9)
-                } else if index < feedback.correctPositions + feedback.correctDigits {
-                    Circle().strokeBorder(Color.discYellow, lineWidth: 2).frame(width: 9, height: 9)
-                } else {
-                    Circle().fill(Color.white.opacity(0.12)).frame(width: 9, height: 9)
-                }
+        HStack(spacing: 12) {
+            count(feedback.correctPositions) {
+                Circle().fill(Color.codeMint)
+            }
+            count(feedback.correctDigits) {
+                Circle().strokeBorder(Color.discYellow, lineWidth: 2)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "\(feedback.correctPositions) in the right place, \(feedback.correctDigits) in the wrong place"
+        )
+    }
+
+    /// A zero stays visible but dimmed, so rows line up down the history.
+    private func count(_ value: Int, @ViewBuilder symbol: () -> some View) -> some View {
+        HStack(spacing: 5) {
+            symbol().frame(width: 9, height: 9)
+            Text("\(value)")
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                .monospacedDigit()
+                .foregroundStyle(.white)
+        }
+        .opacity(value == 0 ? 0.35 : 1)
     }
 }
 
