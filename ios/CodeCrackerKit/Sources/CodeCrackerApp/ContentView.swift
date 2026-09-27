@@ -108,6 +108,12 @@ struct ContentView: View {
             }
         case .nearby:
             LobbyView(kind: kind)
+        case .solo:
+            switch kind {
+            case .ticTacToe: TicTacToeView(vsComputer: true)
+            case .connect4: Connect4View(vsComputer: true)
+            case .codeCracker: CodeCrackerView(vsComputer: true)
+            }
         }
     }
 }
@@ -145,9 +151,11 @@ private struct GameTile: View {
     }
 }
 
-/// Pass the phone, or play against a second device in the same room.
+/// Pass the phone, take on the computer, or play against a second device in
+/// the same room.
 enum PlayMode: String, CaseIterable, Identifiable {
     case passAndPlay
+    case solo
     case nearby
 
     var id: String { rawValue }
@@ -155,6 +163,7 @@ enum PlayMode: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .passAndPlay: "Pass & play"
+        case .solo: "vs Computer"
         case .nearby: "Nearby"
         }
     }
@@ -162,6 +171,7 @@ enum PlayMode: String, CaseIterable, Identifiable {
     var sectionLabel: String {
         switch self {
         case .passAndPlay: "two players, one device"
+        case .solo: "one player, one device"
         case .nearby: "two players, two devices"
         }
     }
@@ -169,6 +179,7 @@ enum PlayMode: String, CaseIterable, Identifiable {
     var blurb: String {
         switch self {
         case .passAndPlay: "Pick a game, pass the device, settle it properly."
+        case .solo: "Pick a game and a difficulty, then take on the computer."
         case .nearby: "Pick a game, then host or join from the device next to you."
         }
     }
@@ -176,6 +187,7 @@ enum PlayMode: String, CaseIterable, Identifiable {
     var footerIcon: String {
         switch self {
         case .passAndPlay: "wifi.slash"
+        case .solo: "cpu"
         case .nearby: "antenna.radiowaves.left.and.right"
         }
     }
@@ -183,6 +195,7 @@ enum PlayMode: String, CaseIterable, Identifiable {
     var footerText: String {
         switch self {
         case .passAndPlay: "No account, no server, no internet."
+        case .solo: "The computer plays on this device. No internet needed."
         case .nearby: "Device to device. No account, no server, no internet."
         }
     }

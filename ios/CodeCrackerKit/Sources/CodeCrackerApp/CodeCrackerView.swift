@@ -16,8 +16,14 @@ struct CodeCrackerView: View {
     /// `nil` for pass-and-play; otherwise the board lives on the session and is
     /// mirrored to the other device.
     var session: MultiplayerSession?
+    /// Single player against the computer. Ignored when `session` is set.
+    var vsComputer = false
 
     @State private var localGame = GuessSecretGame()
+    @State private var difficulty: Difficulty = .medium
+    @State private var humanOpens = true
+    /// The computer's seat in a single-player game, `nil` otherwise.
+    @State private var computerID: PlayerID?
     @State private var firstName = ""
     @State private var secondName = ""
     @State private var entry = ""
@@ -32,7 +38,11 @@ struct CodeCrackerView: View {
     private var displayError: String? { session?.errorMessage ?? errorMessage }
     /// Over the network you only get to guess on your own turn — and not while
     /// a guess is away being scored by the player who owns the code.
-    private var canMove: Bool { session.map { $0.isMyTurn && !$0.isAwaitingFeedback } ?? true }
+    private var canMove: Bool {
+        if let session { return session.isMyTurn && !session.isAwaitingFeedback }
+        if let computerID { return game.currentPlayerID != computerID }
+        return true
+    }
     private var mySeat: Int? {
         guard let session else { return nil }
         return game.players.firstIndex { $0.id == session.localPlayerID }
@@ -53,7 +63,11 @@ struct CodeCrackerView: View {
             VStack(spacing: 18) {
                 switch effectiveStage {
                 case .names:
-                    namesCard
+                    if vsComputer {
+                        soloSetup
+                    } else {
+                        namesCard
+                    }
                 case .handoff(let seat):
                     handoffCard(seat: seat)
                 case .secret(let seat):
@@ -95,6 +109,7 @@ struct CodeCrackerView: View {
         .onAppear {
             historySeat = mySeat ?? historySeat
         }
+        .task(id: computerTurnKey) { await playComputerTurn() }
     }
 
     // MARK: Waiting (nearby games)
@@ -146,6 +161,17 @@ struct CodeCrackerView: View {
         .glassCard(tint: kind.accent)
     }
 
+    private var soloSetup: some View {
+        SoloSetupCard(
+            kind: kind,
+            blurb: "You and the computer each hide a four-digit code with no repeated digits, then take turns guessing the other's.",
+            difficulty: $difficulty,
+            humanOpens: $humanOpens,
+            action: beginSetup,
+            accessory: { legend }
+        )
+    }
+
     /// What the two peg colours mean — the one rule that isn't obvious.
     private var legend: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -169,13 +195,26 @@ struct CodeCrackerView: View {
 
     private func beginSetup() {
         var newGame = GuessSecretGame()
-        _ = try? newGame.addPlayer(named: firstName.isEmpty ? "Player 1" : firstName)
-        _ = try? newGame.addPlayer(named: secondName.isEmpty ? "Player 2" : secondName)
+        if vsComputer {
+            // Seat 0 opens, so going second means the computer sits first.
+            let computer = PlayerID()
+            let names = humanOpens ? ["You", "Computer"] : ["Computer", "You"]
+            for name in names {
+                _ = try? newGame.addPlayer(named: name, id: name == "Computer" ? computer : PlayerID())
+            }
+            try? newGame.setSecret(ComputerPlayer.secret(), for: computer)
+            computerID = computer
+        } else {
+            _ = try? newGame.addPlayer(named: firstName.isEmpty ? "Player 1" : firstName)
+            _ = try? newGame.addPlayer(named: secondName.isEmpty ? "Player 2" : secondName)
+            computerID = nil
+        }
         localGame = newGame
         entry = ""
         errorMessage = nil
         showResult = false
-        stage = .handoff(seat: 0)
+        // Against the computer there is nobody to hide the screen from.
+        stage = vsComputer ? .secret(seat: humanOpens ? 0 : 1) : .handoff(seat: 0)
     }
 
     // MARK: Hand over
@@ -216,7 +255,7 @@ struct CodeCrackerView: View {
 
         return VStack(spacing: 18) {
             VStack(spacing: 6) {
-                Text("\(name), pick your code")
+                Text(computerID != nil ? "Pick your code" : "\(name), pick your code")
                     .font(.system(.title3, design: .rounded, weight: .bold))
                     .foregroundStyle(.white)
                 Text("Four digits, all different, no leading zero.")
@@ -257,7 +296,10 @@ struct CodeCrackerView: View {
             try localGame.setSecret(code, for: game.players[seat].id)
             entry = ""
             errorMessage = nil
-            if seat == 0 {
+            if computerID != nil {
+                historySeat = seat
+                stage = .playing
+            } else if seat == 0 {
                 stage = .handoff(seat: 1)
             } else {
                 historySeat = 0
@@ -274,8 +316,12 @@ struct CodeCrackerView: View {
         VStack(spacing: 16) {
             TurnBar(seats: seats, activeIndex: activeSeatIndex)
 
-            if session != nil {
-                NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
+            if session != nil || computerID != nil {
+                NetworkTurnHint(
+                    isMyTurn: canMove,
+                    accent: kind.accent,
+                    waitingText: computerID != nil ? "Computer is thinking…" : "Waiting for your opponent"
+                )
             }
 
             if !game.isOver {
@@ -440,6 +486,7 @@ struct CodeCrackerView: View {
             return
         }
         localGame = GuessSecretGame()
+        computerID = nil
         firstName = ""
         secondName = ""
         entry = ""
@@ -448,9 +495,45 @@ struct CodeCrackerView: View {
         stage = .names
     }
 
+    // MARK: Computer
+
+    /// Changes whenever a guess lands, a new board is dealt, or setup finishes.
+    /// The last matters when the computer opens: locking in your code changes
+    /// nothing else, and its first guess would never come.
+    private var computerTurnKey: String {
+        "\(game.id)#\(game.turnHistory.count)#\(game.isReadyToPlay)"
+    }
+
+    private func playComputerTurn() async {
+        guard let computerID, localGame.currentPlayerID == computerID else { return }
+        let snapshot = localGame
+        let level = difficulty
+
+        // A beat before answering, so the guess reads as a reply.
+        try? await Task.sleep(for: .milliseconds(500))
+        let guess = await Task.detached(priority: .userInitiated) {
+            // Sees only its own guesses and their feedback, never your code.
+            ComputerPlayer.move(in: snapshot, for: computerID, difficulty: level)
+        }.value
+
+        guard !Task.isCancelled,
+            localGame.id == snapshot.id,
+            localGame.turnHistory.count == snapshot.turnHistory.count,
+            let guess
+        else { return }
+        do {
+            try localGame.play(guess, by: computerID)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
     // MARK: Result copy
 
     private var resultHeadline: String {
+        if case .win(let id) = game.result, computerID != nil {
+            return id == computerID ? "Computer cracked it" : "You cracked it"
+        }
         if case .win(let id) = game.result {
             return "\(game.player(id: id)?.name ?? "Someone") cracked it"
         }
@@ -458,8 +541,13 @@ struct CodeCrackerView: View {
     }
 
     private var resultDetail: String {
-        let guesses = visibleTurns.count
+        guard case .win(let winner) = game.result else { return "" }
+        let guesses = game.history(for: winner).count
         var detail = "Code broken in \(guesses) guess\(guesses == 1 ? "" : "es")."
+
+        if let computerID, winner == computerID, let code = game.player(id: computerID)?.role {
+            detail += " Its code was \(code)."
+        }
 
         if let session {
             if session.opponentCheated {

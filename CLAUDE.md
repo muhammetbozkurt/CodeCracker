@@ -10,8 +10,8 @@ Tic-Tac-Toe, Connect 4) live side by side:
 - **Root** — a Python FastAPI + Socket.IO server with a vanilla-JS web frontend. Two players
   over a network, all state in server memory.
 - **`ios/`** — `CodeCrackerKit`, a Swift port of just the *rules*, plus a SwiftUI app and a CLI
-  harness. No server: games run on-device, either pass-and-play or between two nearby devices
-  over MultipeerConnectivity.
+  harness. No server: games run on-device — pass-and-play, against the computer, or between
+  two nearby devices over MultipeerConnectivity.
 
 The Swift port deliberately diverges from the Python semantics. `ios/CodeCrackerKit/README.md`
 enumerates every difference and why — **read it before changing either side**, and update it when
@@ -37,10 +37,13 @@ python3 -m unittest test_connect4.TestConnect4Game.test_play_turn_enforcement   
 Swift (from `ios/CodeCrackerKit/`):
 
 ```bash
-swift test
-swift test --filter Connect4GameTests
+swift build --build-tests          # reports CodeCrackerApp errors (expected); kit + tests still build
+swift test --skip-build
+swift test --skip-build --filter Connect4GameTests
 swift run codecracker            # interactive terminal harness; `demo` arg scripts all three games
 ```
+
+Plain `swift test` fails because it builds the `CodeCrackerApp` target too (see below).
 
 The iOS app: open `ios/CodeCracker.xcodeproj` (bundle id `com.codecracker.app`, iOS 17+), or use
 the simulator tooling. Xcode is the only way to build it — the app sources do not `import
@@ -50,6 +53,10 @@ APIs, so the `CodeCrackerApp` SPM target does not build with `swift build` on ma
 ```bash
 xcodebuild -project ios/CodeCracker.xcodeproj -scheme CodeCracker
 ```
+
+The Xcode project lists every source file explicitly (no synchronized folders), so a new file
+under `Sources/` must also be added to `project.pbxproj` — a file reference, a build file, the
+group's children, and the Sources build phase — or the app won't compile it.
 
 `requirements.txt` is a `pip freeze` of the author's whole environment (pandas, boto3, gcloud…) —
 only `fastapi`, `uvicorn`, `python-socketio`, and `apscheduler` are actually imported.
@@ -121,6 +128,19 @@ Key invariants that differ from Python and should be preserved:
 Rules changes belong in `CodeCrackerKit` and its tests, not in the views or the CLI — both are
 pure drivers.
 
+### Computer opponent
+
+`ComputerPlayer.swift` holds one pure strategy per game plus `Difficulty`; it lives in the kit
+because choosing a move is rules logic. The README's "Computer opponent" section covers strength
+and the non-obvious choices. Keep the CodeCracker solver's input to the computer's own
+`history(for:)` — never the game — since locally the human's code sits in the same struct.
+
+In the app, each game view takes `vsComputer: Bool` alongside `session`. The views drive the
+computer with `.task(id:)` keyed on `game.id` and `turnHistory.count` (plus `isReadyToPlay` for
+CodeCracker, where locking in your code when the computer opens changes nothing else). The task
+waits ~0.5s, computes the move in a detached task on a copy of the game, and drops it if the
+board changed meanwhile. `SoloSetupCard` (in `TicTacToeView.swift`) is the shared setup card.
+
 ### Nearby multiplayer
 
 Device-to-device play lives entirely in the **app** target (`Sources/CodeCrackerApp/`), never in
@@ -186,7 +206,8 @@ right" forever.
 
 Each game view takes an optional `MultiplayerSession`. With one it reads the board from the
 session, gates input on `isMyTurn`, and routes moves through `submit(_:)`; with `nil` it keeps
-its own `@State` game and behaves exactly as before. `Info.plist` (merged into the generated
+its own `@State` game — shared by two people, or against the computer when `vsComputer` is set.
+`Info.plist` (merged into the generated
 one via `INFOPLIST_FILE`) carries `NSLocalNetworkUsageDescription` and the `NSBonjourServices`
 entries for `_codecracker._tcp`/`._udp` — without those, discovery silently finds nothing.
 

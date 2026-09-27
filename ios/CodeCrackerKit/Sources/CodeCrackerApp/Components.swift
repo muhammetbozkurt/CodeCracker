@@ -821,11 +821,14 @@ struct GameThumbnail: View {
 struct NetworkTurnHint: View {
     let isMyTurn: Bool
     let accent: Color
+    /// Shown while the other side moves. Nearby games keep the default;
+    /// against the computer the wait is its thinking time.
+    var waitingText = "Waiting for your opponent"
 
     var body: some View {
         HStack(spacing: 7) {
             Image(systemName: isMyTurn ? "hand.tap.fill" : "hourglass")
-            Text(isMyTurn ? "Your move" : "Waiting for your opponent")
+            Text(isMyTurn ? "Your move" : waitingText)
         }
         .font(.system(.footnote, design: .rounded, weight: .semibold))
         .foregroundStyle(isMyTurn ? accent : Color.textTertiary)

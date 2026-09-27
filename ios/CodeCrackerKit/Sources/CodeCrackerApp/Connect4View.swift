@@ -4,8 +4,16 @@ struct Connect4View: View {
     /// `nil` for pass-and-play; otherwise the board lives on the session and is
     /// mirrored to the other device.
     var session: MultiplayerSession?
+    /// Single player against the computer. Ignored when `session` is set.
+    var vsComputer = false
 
     @State private var localGame = Connect4Game()
+    @State private var difficulty: Difficulty = .medium
+    @State private var humanOpens = true
+    /// The computer's seat in a single-player game, `nil` otherwise.
+    @State private var computerID: PlayerID?
+    /// The board's current cell size, so a computer move animates like a tap.
+    @State private var boardCell: CGFloat = 40
     @State private var redName = ""
     @State private var yellowName = ""
     @State private var started = false
@@ -20,8 +28,13 @@ struct Connect4View: View {
     /// A networked game is already set up by the time this view appears.
     private var isPlaying: Bool { session != nil || started }
     private var displayError: String? { session?.errorMessage ?? errorMessage }
-    /// Over the network you only get to touch the board on your own turn.
-    private var canMove: Bool { session.map(\.isMyTurn) ?? true }
+    /// Over the network, or against the computer, you only get to touch the
+    /// board on your own turn.
+    private var canMove: Bool {
+        if let session { return session.isMyTurn }
+        if let computerID { return game.currentPlayerID != computerID }
+        return true
+    }
     private let spacing: CGFloat = 6
     private let framePadding: CGFloat = 10
 
@@ -39,8 +52,12 @@ struct Connect4View: View {
                     let cell = cellSize(in: proxy.size)
                     VStack(spacing: 16) {
                         TurnBar(seats: seats, activeIndex: activeSeatIndex)
-                        if session != nil {
-                            NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
+                        if session != nil || computerID != nil {
+                            NetworkTurnHint(
+                                isMyTurn: canMove,
+                                accent: kind.accent,
+                                waitingText: computerID != nil ? "Computer is thinking…" : "Waiting for your opponent"
+                            )
                         }
                         // Capped: the board should settle just under the turn
                         // bar, not float in the middle of the screen.
@@ -62,7 +79,17 @@ struct Connect4View: View {
                     }
                     .padding(.top, 12)
                     .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
+                    .onChange(of: cell, initial: true) { _, size in boardCell = size }
                 }
+            } else if vsComputer {
+                SoloSetupCard(
+                    kind: kind,
+                    blurb: "Red opens. Four in a line — any direction — takes it.",
+                    difficulty: $difficulty,
+                    humanOpens: $humanOpens,
+                    action: startGame
+                )
+                .frame(maxHeight: .infinity)
             } else {
                 SetupCard(
                     kind: kind,
@@ -94,6 +121,7 @@ struct Connect4View: View {
                 withAnimation(.easeInOut.delay(0.6)) { showResult = true }
             }
         }
+        .task(id: computerTurnKey) { await playComputerTurn() }
     }
 
     // MARK: Layout
@@ -222,8 +250,19 @@ struct Connect4View: View {
             return
         }
         var newGame = Connect4Game()
-        try? newGame.addPlayer(Player(name: redName.isEmpty ? "Red" : redName, role: .red))
-        try? newGame.addPlayer(Player(name: yellowName.isEmpty ? "Yellow" : yellowName, role: .yellow))
+        if vsComputer {
+            // Seat 0 opens and plays red, so going second means the computer sits first.
+            let you = Player(name: "You", role: humanOpens ? Disc.red : .yellow)
+            let computer = Player(name: "Computer", role: humanOpens ? Disc.yellow : .red)
+            for player in humanOpens ? [you, computer] : [computer, you] {
+                try? newGame.addPlayer(player)
+            }
+            computerID = computer.id
+        } else {
+            try? newGame.addPlayer(Player(name: redName.isEmpty ? "Red" : redName, role: .red))
+            try? newGame.addPlayer(Player(name: yellowName.isEmpty ? "Yellow" : yellowName, role: .yellow))
+            computerID = nil
+        }
         localGame = newGame
         errorMessage = nil
         falling = nil
@@ -256,6 +295,12 @@ struct Connect4View: View {
             return
         }
 
+        playLocally(column, by: turn, landingRow: landingRow, disc: disc, cell: cell)
+    }
+
+    /// Plays a column on this device's board and animates the disc falling in.
+    /// Shared by a tap and the computer's turn.
+    private func playLocally(_ column: Int, by turn: PlayerID, landingRow: Int, disc: Disc, cell: CGFloat) {
         do {
             try localGame.play(column, by: turn)
             errorMessage = nil
@@ -278,11 +323,38 @@ struct Connect4View: View {
         }
     }
 
+    // MARK: Computer
+
+    /// Changes whenever a move lands or a new board is dealt, restarting the
+    /// computer's turn and cancelling a stale one.
+    private var computerTurnKey: String { "\(game.id)#\(game.turnHistory.count)" }
+
+    private func playComputerTurn() async {
+        guard let computerID, localGame.currentPlayerID == computerID else { return }
+        let snapshot = localGame
+        let level = difficulty
+
+        // A beat before answering, so the move reads as a reply.
+        try? await Task.sleep(for: .milliseconds(500))
+        let column = await Task.detached(priority: .userInitiated) {
+            ComputerPlayer.move(in: snapshot, for: computerID, difficulty: level)
+        }.value
+
+        guard !Task.isCancelled,
+            localGame.id == snapshot.id,
+            localGame.turnHistory.count == snapshot.turnHistory.count,
+            let column,
+            let disc = localGame.player(id: computerID)?.role,
+            let landingRow = localGame.landingRow(inColumn: column)
+        else { return }
+        playLocally(column, by: computerID, landingRow: landingRow, disc: disc, cell: boardCell)
+    }
 
     // MARK: Result copy
 
     private var resultHeadline: String {
         switch game.result {
+        case .win(let id) where computerID != nil: id == computerID ? "Computer wins" : "You win"
         case .win(let id): "\(game.player(id: id)?.name ?? "Someone") wins"
         case .draw: "Board full"
         case .ongoing: ""

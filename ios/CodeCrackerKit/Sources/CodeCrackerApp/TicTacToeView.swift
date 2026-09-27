@@ -4,8 +4,14 @@ struct TicTacToeView: View {
     /// `nil` for pass-and-play; otherwise the board lives on the session and is
     /// mirrored to the other device.
     var session: MultiplayerSession?
+    /// Single player against the computer. Ignored when `session` is set.
+    var vsComputer = false
 
     @State private var localGame = TicTacToeGame()
+    @State private var difficulty: Difficulty = .medium
+    @State private var humanOpens = true
+    /// The computer's seat in a single-player game, `nil` otherwise.
+    @State private var computerID: PlayerID?
     @State private var playerXName = ""
     @State private var playerOName = ""
     @State private var started = false
@@ -20,13 +26,25 @@ struct TicTacToeView: View {
     private var displayError: String? { session?.errorMessage ?? errorMessage }
     /// Pass-and-play lets whoever holds the phone move; over the network you
     /// only get to touch the board on your own turn.
-    private var canMove: Bool { session.map(\.isMyTurn) ?? true }
+    private var canMove: Bool {
+        if let session { return session.isMyTurn }
+        if let computerID { return game.currentPlayerID != computerID }
+        return true
+    }
 
     var body: some View {
         GameShell(kind: kind) {
             VStack(spacing: 22) {
                 if isPlaying {
                     boardScreen
+                } else if vsComputer {
+                    SoloSetupCard(
+                        kind: kind,
+                        blurb: "X opens. Three in a row — across, down or corner to corner — wins.",
+                        difficulty: $difficulty,
+                        humanOpens: $humanOpens,
+                        action: startGame
+                    )
                 } else {
                     SetupCard(
                         kind: kind,
@@ -59,6 +77,7 @@ struct TicTacToeView: View {
                 withAnimation(.easeInOut.delay(0.45)) { showResult = true }
             }
         }
+        .task(id: computerTurnKey) { await playComputerTurn() }
     }
 
     // MARK: Setup
@@ -70,8 +89,19 @@ struct TicTacToeView: View {
             return
         }
         var newGame = TicTacToeGame()
-        try? newGame.addPlayer(Player(name: playerXName.isEmpty ? "Player X" : playerXName, role: .x))
-        try? newGame.addPlayer(Player(name: playerOName.isEmpty ? "Player O" : playerOName, role: .o))
+        if vsComputer {
+            // Seat 0 opens and plays X, so going second means the computer sits first.
+            let you = Player(name: "You", role: humanOpens ? Mark.x : .o)
+            let computer = Player(name: "Computer", role: humanOpens ? Mark.o : .x)
+            for player in humanOpens ? [you, computer] : [computer, you] {
+                try? newGame.addPlayer(player)
+            }
+            computerID = computer.id
+        } else {
+            try? newGame.addPlayer(Player(name: playerXName.isEmpty ? "Player X" : playerXName, role: .x))
+            try? newGame.addPlayer(Player(name: playerOName.isEmpty ? "Player O" : playerOName, role: .o))
+            computerID = nil
+        }
         localGame = newGame
         errorMessage = nil
         showResult = false
@@ -90,8 +120,12 @@ struct TicTacToeView: View {
             VStack(spacing: 20) {
                 TurnBar(seats: seats, activeIndex: activeSeatIndex)
 
-                if session != nil {
-                    NetworkTurnHint(isMyTurn: canMove, accent: kind.accent)
+                if session != nil || computerID != nil {
+                    NetworkTurnHint(
+                        isMyTurn: canMove,
+                        accent: kind.accent,
+                        waitingText: computerID != nil ? "Computer is thinking…" : "Waiting for your opponent"
+                    )
                 }
 
                 board
@@ -194,10 +228,36 @@ struct TicTacToeView: View {
         }
     }
 
+    // MARK: Computer
+
+    /// Changes whenever a move lands or a new board is dealt, restarting the
+    /// computer's turn and cancelling a stale one.
+    private var computerTurnKey: String { "\(game.id)#\(game.turnHistory.count)" }
+
+    private func playComputerTurn() async {
+        guard let computerID, localGame.currentPlayerID == computerID else { return }
+        let snapshot = localGame
+        let level = difficulty
+
+        // A beat before answering, so the move reads as a reply.
+        try? await Task.sleep(for: .milliseconds(500))
+        let cell = await Task.detached(priority: .userInitiated) {
+            ComputerPlayer.move(in: snapshot, for: computerID, difficulty: level)
+        }.value
+
+        guard !Task.isCancelled,
+            localGame.id == snapshot.id,
+            localGame.turnHistory.count == snapshot.turnHistory.count,
+            let cell
+        else { return }
+        try? localGame.play(cell, by: computerID)
+    }
+
     // MARK: Result copy
 
     private var resultHeadline: String {
         switch game.result {
+        case .win(let id) where computerID != nil: id == computerID ? "Computer wins" : "You win"
         case .win(let id): "\(game.player(id: id)?.name ?? "Someone") wins"
         case .draw: "Dead heat"
         case .ongoing: ""
@@ -257,5 +317,77 @@ struct SetupCard: View {
             )
         }
         .glassCard(tint: kind.accent)
+    }
+}
+
+/// The single-player setup card shared by all three games: difficulty and who
+/// opens, no names.
+struct SoloSetupCard<Accessory: View>: View {
+    let kind: GameKind
+    let blurb: String
+    @Binding var difficulty: Difficulty
+    @Binding var humanOpens: Bool
+    let action: () -> Void
+    /// Extra content under the blurb, where the pass-and-play card puts it —
+    /// CodeCracker's peg legend.
+    @ViewBuilder var accessory: Accessory
+
+    var body: some View {
+        VStack(spacing: 20) {
+            GameThumbnail(kind: kind)
+
+            VStack(spacing: 8) {
+                Text(kind.title)
+                    .font(.system(.title2, design: .rounded, weight: .bold))
+                    .foregroundStyle(.white)
+                Text(blurb)
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundStyle(Color.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            accessory
+
+            VStack(spacing: 14) {
+                Picker("Difficulty", selection: $difficulty) {
+                    ForEach(Difficulty.allCases, id: \.self) { level in
+                        Text(level.rawValue.capitalized).tag(level)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                Toggle("You go first", isOn: $humanOpens)
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
+                    .foregroundStyle(.white)
+                    .tint(kind.accent)
+            }
+
+            PrimaryButton(
+                title: "Start game",
+                systemImage: "play.fill",
+                gradient: kind.gradient,
+                action: action
+            )
+        }
+        .glassCard(tint: kind.accent)
+    }
+}
+
+extension SoloSetupCard where Accessory == EmptyView {
+    init(
+        kind: GameKind,
+        blurb: String,
+        difficulty: Binding<Difficulty>,
+        humanOpens: Binding<Bool>,
+        action: @escaping () -> Void
+    ) {
+        self.init(
+            kind: kind,
+            blurb: blurb,
+            difficulty: difficulty,
+            humanOpens: humanOpens,
+            action: action,
+            accessory: { EmptyView() }
+        )
     }
 }
