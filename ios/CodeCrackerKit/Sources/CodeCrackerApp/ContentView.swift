@@ -36,7 +36,11 @@ struct ContentView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
-            SectionLabel(text: mode.sectionLabel)
+            HStack(alignment: .center) {
+                SectionLabel(text: mode.sectionLabel)
+                Spacer(minLength: 12)
+                statsButton
+            }
 
             Text("CodeCracker")
                 .font(.system(size: 42, weight: .heavy, design: .rounded))
@@ -55,6 +59,23 @@ struct ContentView: View {
         .padding(.top, 24)
         .opacity(appeared ? 1 : 0)
         .offset(y: appeared ? 0 : 12)
+    }
+
+    /// The screen's one way in to the record. `ContentView` hides the
+    /// navigation bar, so this sits in the header rather than a toolbar.
+    private var statsButton: some View {
+        NavigationLink {
+            StatsView()
+        } label: {
+            Image(systemName: "chart.bar.fill")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(Color.textSecondary)
+                .frame(width: 38, height: 38)
+                .glassSurface(Circle())
+                .overlay(Circle().stroke(Color.hairline, lineWidth: 1))
+        }
+        .buttonStyle(PressableStyle(scale: 0.92))
+        .accessibilityLabel("Stats")
     }
 
     private var modePicker: some View {

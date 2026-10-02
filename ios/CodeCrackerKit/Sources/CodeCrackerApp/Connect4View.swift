@@ -22,7 +22,19 @@ struct Connect4View: View {
     @State private var falling: FallingDisc?
     @State private var fallOffset: CGFloat = 0
 
+    @Environment(StatsStore.self) private var stats
+    /// The board whose result is already counted, so a re-fired `isOver` or a
+    /// redrawn view cannot count the same game twice.
+    @State private var recordedGameID: String?
+
     private let kind = GameKind.connect4
+
+    /// Derived rather than passed in: `ContentView` sets `session`/`vsComputer`
+    /// from the same enum, so re-reading them here cannot disagree with it.
+    private var mode: PlayMode {
+        if session != nil { return .nearby }
+        return vsComputer ? .solo : .passAndPlay
+    }
 
     private var game: Connect4Game { session?.connect4 ?? localGame }
     /// A networked game is already set up by the time this view appears.
@@ -118,6 +130,7 @@ struct Connect4View: View {
         .sensoryFeedback(.success, trigger: game.isOver)
         .onChange(of: game.isOver) { _, isOver in
             if isOver {
+                recordResult()
                 withAnimation(.easeInOut.delay(0.6)) { showResult = true }
             }
         }
@@ -348,6 +361,40 @@ struct Connect4View: View {
             let landingRow = localGame.landingRow(inColumn: column)
         else { return }
         playLocally(column, by: computerID, landingRow: landingRow, disc: disc, cell: boardCell)
+    }
+
+    // MARK: Stats
+
+    private func recordResult() {
+        guard let outcome, recordedGameID != game.id else { return }
+        recordedGameID = game.id
+        stats.record(
+            outcome,
+            kind: kind,
+            mode: mode,
+            difficulty: mode == .solo ? difficulty : nil
+        )
+    }
+
+    /// Who "you" are depends on the mode: the seat the computer does not hold,
+    /// the seat this device owns over the network, or nobody at all when both
+    /// players share the phone. `nil` while the game is still running, so an
+    /// unfinished board cannot be counted as anything.
+    private var outcome: GameOutcome? {
+        switch game.result {
+        case .ongoing:
+            nil
+        case .draw:
+            .drawn
+        case .win(let id):
+            if let computerID {
+                id == computerID ? .lost : .won
+            } else if let session {
+                id == session.localPlayerID ? .won : .lost
+            } else {
+                .decided
+            }
+        }
     }
 
     // MARK: Result copy

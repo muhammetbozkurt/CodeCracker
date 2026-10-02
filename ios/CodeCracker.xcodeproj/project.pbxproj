@@ -24,6 +24,8 @@
 		556193CD929DB8709E6E9DED /* CodeCrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D0A457B46B0918953094DC /* CodeCrackerView.swift */; };
 		0697C6763E8E0773BC7E0ABD /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC6669E969A7617E94B730B /* Components.swift */; };
 		1A2F5C0093E4471B8D6A0002 /* NetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0001 /* NetMessage.swift */; };
+		1A2F5C0093E4471B8D6A0012 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0011 /* GameStats.swift */; };
+		1A2F5C0093E4471B8D6A0022 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0021 /* StatsView.swift */; };
 		1A2F5C0093E4471B8D6A0004 /* MultipeerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0003 /* MultipeerTransport.swift */; };
 		1A2F5C0093E4471B8D6A0006 /* MultiplayerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0005 /* MultiplayerSession.swift */; };
 		1A2F5C0093E4471B8D6A0008 /* LobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0007 /* LobbyView.swift */; };
@@ -48,6 +50,8 @@
 		31D0A457B46B0918953094DC /* CodeCrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeCrackerView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/CodeCrackerView.swift; sourceTree = "<group>"; };
 		CFC6669E969A7617E94B730B /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Components.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/Components.swift; sourceTree = "<group>"; };
 		1A2F5C0093E4471B8D6A0001 /* NetMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetMessage.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/NetMessage.swift; sourceTree = "<group>"; };
+		1A2F5C0093E4471B8D6A0011 /* GameStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GameStats.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/GameStats.swift; sourceTree = "<group>"; };
+		1A2F5C0093E4471B8D6A0021 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatsView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/StatsView.swift; sourceTree = "<group>"; };
 		1A2F5C0093E4471B8D6A0003 /* MultipeerTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MultipeerTransport.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/MultipeerTransport.swift; sourceTree = "<group>"; };
 		1A2F5C0093E4471B8D6A0005 /* MultiplayerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MultiplayerSession.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/MultiplayerSession.swift; sourceTree = "<group>"; };
 		1A2F5C0093E4471B8D6A0007 /* LobbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LobbyView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/LobbyView.swift; sourceTree = "<group>"; };
@@ -108,6 +112,8 @@
 				31D0A457B46B0918953094DC /* CodeCrackerView.swift */,
 				CFC6669E969A7617E94B730B /* Components.swift */,
 				1A2F5C0093E4471B8D6A0001 /* NetMessage.swift */,
+				1A2F5C0093E4471B8D6A0011 /* GameStats.swift */,
+				1A2F5C0093E4471B8D6A0021 /* StatsView.swift */,
 				1A2F5C0093E4471B8D6A0003 /* MultipeerTransport.swift */,
 				1A2F5C0093E4471B8D6A0005 /* MultiplayerSession.swift */,
 				1A2F5C0093E4471B8D6A0007 /* LobbyView.swift */,
@@ -195,6 +201,8 @@
 				556193CD929DB8709E6E9DED /* CodeCrackerView.swift in Sources */,
 				0697C6763E8E0773BC7E0ABD /* Components.swift in Sources */,
 				1A2F5C0093E4471B8D6A0002 /* NetMessage.swift in Sources */,
+				1A2F5C0093E4471B8D6A0012 /* GameStats.swift in Sources */,
+				1A2F5C0093E4471B8D6A0022 /* StatsView.swift in Sources */,
 				1A2F5C0093E4471B8D6A0004 /* MultipeerTransport.swift in Sources */,
 				1A2F5C0093E4471B8D6A0006 /* MultiplayerSession.swift in Sources */,
 				1A2F5C0093E4471B8D6A0008 /* LobbyView.swift in Sources */,

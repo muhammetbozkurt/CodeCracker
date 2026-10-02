@@ -8,6 +8,7 @@ struct CodeCrackerApp: App {
                 // The app is designed dark in both system appearances, matching
                 // the web client. See Theme.swift.
                 .preferredColorScheme(.dark)
+                .environment(StatsStore.shared)
         }
     }
 }

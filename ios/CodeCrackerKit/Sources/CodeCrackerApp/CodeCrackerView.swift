@@ -32,7 +32,31 @@ struct CodeCrackerView: View {
     @State private var showResult = false
     @State private var errorMessage: String?
 
+    @Environment(StatsStore.self) private var stats
+    /// The board whose result is already counted, so a re-fired hook or a
+    /// redrawn view cannot count the same game twice.
+    @State private var recordedGameID: String?
+
     private let kind = GameKind.codeCracker
+
+    /// Derived rather than passed in: `ContentView` sets `session`/`vsComputer`
+    /// from the same enum, so re-reading them here cannot disagree with it.
+    private var mode: PlayMode {
+        if session != nil { return .nearby }
+        return vsComputer ? .solo : .passAndPlay
+    }
+
+    /// A nearby game ends twice over: the board finishes, and then the reveal
+    /// either checks out or exposes a cheat. Counting on the first step would
+    /// credit a result the commitment check has not vouched for yet.
+    ///
+    /// An opponent who never reveals — they quit, or the connection drops —
+    /// leaves this false, and the game goes uncounted. That is the honest
+    /// answer: nothing about the result was ever verified.
+    private var revealSettled: Bool {
+        guard let session else { return true }
+        return session.revealedOpponentCode != nil || session.opponentCheated
+    }
 
     private var game: GuessSecretGame { session?.codeCracker ?? localGame }
     private var displayError: String? { session?.errorMessage ?? errorMessage }
@@ -96,9 +120,12 @@ struct CodeCrackerView: View {
         .sensoryFeedback(.success, trigger: game.isOver)
         .onChange(of: game.isOver) { _, isOver in
             if isOver {
+                recordResult()
                 withAnimation(.easeInOut.delay(0.3)) { showResult = true }
             }
         }
+        // Nearby games finish counting here instead, once the reveal lands.
+        .onChange(of: revealSettled) { _, _ in recordResult() }
         .onChange(of: game.id) { _, _ in
             // A rematch dealt by the host replaces the board underneath us.
             entry = ""
@@ -525,6 +552,45 @@ struct CodeCrackerView: View {
             try localGame.play(guess, by: computerID)
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    // MARK: Stats
+
+    private func recordResult() {
+        guard let outcome, revealSettled, recordedGameID != game.id else { return }
+        recordedGameID = game.id
+        stats.record(
+            outcome,
+            kind: kind,
+            mode: mode,
+            difficulty: mode == .solo ? difficulty : nil
+        )
+    }
+
+    /// Who "you" are depends on the mode: the seat the computer does not hold,
+    /// the seat this device owns over the network, or nobody at all when both
+    /// players share the phone. `nil` while the game is still running, so an
+    /// unfinished board cannot be counted as anything.
+    private var outcome: GameOutcome? {
+        switch game.result {
+        case .ongoing:
+            nil
+        case .draw:
+            .drawn
+        case .win(let id):
+            if let computerID {
+                id == computerID ? .lost : .won
+            } else if let session {
+                // A proven cheat makes the result meaningless — they could have
+                // answered every guess as they pleased. Count that the game
+                // happened and credit nobody.
+                session.opponentCheated
+                    ? .decided
+                    : (id == session.localPlayerID ? .won : .lost)
+            } else {
+                .decided
+            }
         }
     }
 
