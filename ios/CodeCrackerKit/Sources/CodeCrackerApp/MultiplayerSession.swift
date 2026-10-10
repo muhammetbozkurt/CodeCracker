@@ -104,7 +104,7 @@ final class MultiplayerSession {
         self.kind = kind
         self.role = role
         self.localName = localName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ? (role == .host ? "Host" : "Guest")
+            ? (role == .host ? String(localized: "Host") : String(localized: "Guest"))
             : localName
         transport = MultipeerTransport(displayName: self.localName, room: kind.rawValue)
 
@@ -172,7 +172,7 @@ final class MultiplayerSession {
             errorMessage = nil
             send(.move(playerID: localPlayerID, seq: seq, move: move))
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -189,7 +189,7 @@ final class MultiplayerSession {
             errorMessage = nil
             send(.commit(playerID: localPlayerID, digest: SecretCommitment.digest(code, salt: salt)))
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -245,16 +245,20 @@ final class MultiplayerSession {
             // A guest still in `.connecting` never got a game: the host turned
             // it away, never answered, or the link failed while setting up.
             if role == .guest, phase == .connecting {
-                phase = .ended(reason: "Couldn't join \(peer.displayName). They may have declined, or not answered in time.")
+                phase = .ended(
+                    reason: String(
+                        localized: "Couldn't join \(peer.displayName). They may have declined, or not answered in time."
+                    )
+                )
                 return
             }
-            phase = .ended(reason: "\(opponentName ?? "The other player") left the game.")
+            phase = .ended(reason: String(localized: "\(opponentName ?? String(localized: "The other player")) left the game."))
 
         case .received(let data, let peer):
             do {
                 receive(try NetMessage.decoded(from: data), from: peer)
             } catch {
-                phase = .ended(reason: "Could not read a message from the other device.")
+                phase = .ended(reason: String(localized: "Could not read a message from the other device."))
             }
 
         case .failed(let reason):
@@ -309,7 +313,7 @@ final class MultiplayerSession {
             guard playerID == remotePlayerID else { return refuse() }
             guard let board else { return }
             guard seq == board.turnCount else {
-                phase = .ended(reason: "The two devices fell out of sync.")
+                phase = .ended(reason: String(localized: "The two devices fell out of sync."))
                 return
             }
             // A move the rules reject here but accepted there means the copies
@@ -317,7 +321,7 @@ final class MultiplayerSession {
             do {
                 try apply(move, by: playerID)
             } catch {
-                phase = .ended(reason: "The two devices fell out of sync.")
+                phase = .ended(reason: String(localized: "The two devices fell out of sync."))
                 return
             }
             // Their guess was against the code this device holds, so this is
@@ -333,7 +337,7 @@ final class MultiplayerSession {
             // Only ever the answer to the guess this device is waiting on.
             guard playerID == localPlayerID, pendingGuess == guess else { return refuse() }
             guard case .codeCracker(var game) = board, seq == game.turnHistory.count else {
-                phase = .ended(reason: "The two devices fell out of sync.")
+                phase = .ended(reason: String(localized: "The two devices fell out of sync."))
                 return
             }
             pendingGuess = nil
@@ -341,7 +345,7 @@ final class MultiplayerSession {
                 try game.record(guess, scoredAs: feedback, by: localPlayerID)
                 board = .codeCracker(game)
             } catch {
-                phase = .ended(reason: "The two devices fell out of sync.")
+                phase = .ended(reason: String(localized: "The two devices fell out of sync."))
                 return
             }
             revealIfFinished()
@@ -366,7 +370,7 @@ final class MultiplayerSession {
             startGame()
 
         case .quit:
-            phase = .ended(reason: "\(opponentName ?? "The other player") left the game.")
+            phase = .ended(reason: String(localized: "\(opponentName ?? String(localized: "The other player")) left the game."))
         }
     }
 
@@ -374,7 +378,7 @@ final class MultiplayerSession {
     /// are running different builds, or somebody is cheating. Neither is worth
     /// carrying on through, and the peer's own name is not quoted back here.
     private func refuse() {
-        phase = .ended(reason: "The other device sent a message it had no right to send.")
+        phase = .ended(reason: String(localized: "The other device sent a message it had no right to send."))
     }
 
     // MARK: Board plumbing
@@ -384,7 +388,7 @@ final class MultiplayerSession {
         guard role == .host else { return }
         let seats = [
             NetSeat(playerID: PlayerID(), name: localName),
-            NetSeat(playerID: PlayerID(), name: pendingGuestName ?? opponentName ?? "Guest"),
+            NetSeat(playerID: PlayerID(), name: pendingGuestName ?? opponentName ?? String(localized: "Guest")),
         ]
         let gameID = GameID.generate()
         localPlayerID = seats[0].playerID
