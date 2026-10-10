@@ -52,7 +52,7 @@ struct TicTacToeView: View {
                 } else if vsComputer {
                     SoloSetupCard(
                         kind: kind,
-                        blurb: "X opens. Three in a row — across, down or corner to corner — wins.",
+                        blurb: String(localized: "X opens. Three in a row — across, down or corner to corner — wins."),
                         difficulty: $difficulty,
                         humanOpens: $humanOpens,
                         action: startGame
@@ -60,11 +60,11 @@ struct TicTacToeView: View {
                 } else {
                     SetupCard(
                         kind: kind,
-                        firstLabel: "Player X",
-                        secondLabel: "Player O",
+                        firstLabel: String(localized: "Player X"),
+                        secondLabel: String(localized: "Player O"),
                         firstName: $playerXName,
                         secondName: $playerOName,
-                        blurb: "X opens. Three in a row — across, down or corner to corner — wins.",
+                        blurb: String(localized: "X opens. Three in a row — across, down or corner to corner — wins."),
                         action: startGame
                     )
                 }
@@ -104,15 +104,15 @@ struct TicTacToeView: View {
         var newGame = TicTacToeGame()
         if vsComputer {
             // Seat 0 opens and plays X, so going second means the computer sits first.
-            let you = Player(name: "You", role: humanOpens ? Mark.x : .o)
-            let computer = Player(name: "Computer", role: humanOpens ? Mark.o : .x)
+            let you = Player(name: String(localized: "You"), role: humanOpens ? Mark.x : .o)
+            let computer = Player(name: String(localized: "Computer"), role: humanOpens ? Mark.o : .x)
             for player in humanOpens ? [you, computer] : [computer, you] {
                 try? newGame.addPlayer(player)
             }
             computerID = computer.id
         } else {
-            try? newGame.addPlayer(Player(name: playerXName.isEmpty ? "Player X" : playerXName, role: .x))
-            try? newGame.addPlayer(Player(name: playerOName.isEmpty ? "Player O" : playerOName, role: .o))
+            try? newGame.addPlayer(Player(name: playerXName.isEmpty ? String(localized: "Player X") : playerXName, role: .x))
+            try? newGame.addPlayer(Player(name: playerOName.isEmpty ? String(localized: "Player O") : playerOName, role: .o))
             computerID = nil
         }
         localGame = newGame
@@ -137,7 +137,9 @@ struct TicTacToeView: View {
                     NetworkTurnHint(
                         isMyTurn: canMove,
                         accent: kind.accent,
-                        waitingText: computerID != nil ? "Computer is thinking…" : "Waiting for your opponent"
+                        waitingText: computerID != nil
+                            ? String(localized: "Computer is thinking…")
+                            : String(localized: "Waiting for your opponent")
                     )
                 }
 
@@ -147,7 +149,7 @@ struct TicTacToeView: View {
                 ErrorLine(message: displayError)
 
                 if game.isOver {
-                    SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
+                    SecondaryButton(title: String(localized: "New game"), systemImage: "arrow.counterclockwise") {
                         if let session {
                             session.requestRematch()
                         } else {
@@ -237,7 +239,7 @@ struct TicTacToeView: View {
             try localGame.play(cell, by: turn)
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -304,17 +306,19 @@ struct TicTacToeView: View {
 
     private var resultHeadline: String {
         switch game.result {
-        case .win(let id) where computerID != nil: id == computerID ? "Computer wins" : "You win"
-        case .win(let id): "\(game.player(id: id)?.name ?? "Someone") wins"
-        case .draw: "Dead heat"
+        case .win(let id) where computerID != nil:
+            id == computerID ? String(localized: "Computer wins") : String(localized: "You win")
+        case .win(let id):
+            String(localized: "\(game.player(id: id)?.name ?? String(localized: "Someone")) wins")
+        case .draw: String(localized: "Dead heat")
         case .ongoing: ""
         }
     }
 
     private var resultDetail: String {
         switch game.result {
-        case .win: "Three in a row in \(game.turnHistory.count) moves."
-        case .draw: "Nine squares, no winner. Again?"
+        case .win: String(localized: "Three in a row in \(game.turnHistory.count) moves.")
+        case .draw: String(localized: "Nine squares, no winner. Again?")
         case .ongoing: ""
         }
     }
@@ -357,7 +361,7 @@ struct SetupCard: View {
             }
 
             PrimaryButton(
-                title: "Start game",
+                title: String(localized: "Start game"),
                 systemImage: "play.fill",
                 gradient: kind.gradient,
                 action: action
@@ -398,7 +402,7 @@ struct SoloSetupCard<Accessory: View>: View {
             VStack(spacing: 14) {
                 Picker("Difficulty", selection: $difficulty) {
                     ForEach(Difficulty.allCases, id: \.self) { level in
-                        Text(level.rawValue.capitalized).tag(level)
+                        Text(level.title).tag(level)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -410,7 +414,7 @@ struct SoloSetupCard<Accessory: View>: View {
             }
 
             PrimaryButton(
-                title: "Start game",
+                title: String(localized: "Start game"),
                 systemImage: "play.fill",
                 gradient: kind.gradient,
                 action: action
@@ -436,5 +440,17 @@ extension SoloSetupCard where Accessory == EmptyView {
             action: action,
             accessory: { EmptyView() }
         )
+    }
+}
+
+extension Difficulty {
+    /// The level's name as the player reads it. The raw value is a storage key
+    /// (stats keys use it), so it stays English.
+    var title: String {
+        switch self {
+        case .easy: String(localized: "Easy")
+        case .medium: String(localized: "Medium")
+        case .hard: String(localized: "Hard")
+        }
     }
 }
