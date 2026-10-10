@@ -68,7 +68,9 @@ struct Connect4View: View {
                             NetworkTurnHint(
                                 isMyTurn: canMove,
                                 accent: kind.accent,
-                                waitingText: computerID != nil ? "Computer is thinking…" : "Waiting for your opponent"
+                                waitingText: computerID != nil
+                                    ? String(localized: "Computer is thinking…")
+                                    : String(localized: "Waiting for your opponent")
                             )
                         }
                         // Capped: the board should settle just under the turn
@@ -78,7 +80,7 @@ struct Connect4View: View {
                         board(cell: cell)
                         ErrorLine(message: displayError)
                         if game.isOver {
-                            SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
+                            SecondaryButton(title: String(localized: "New game"), systemImage: "arrow.counterclockwise") {
                                 if let session {
                                     session.requestRematch()
                                 } else {
@@ -96,7 +98,7 @@ struct Connect4View: View {
             } else if vsComputer {
                 SoloSetupCard(
                     kind: kind,
-                    blurb: "Red opens. Four in a line — any direction — takes it.",
+                    blurb: String(localized: "Red opens. Four in a line — any direction — takes it."),
                     difficulty: $difficulty,
                     humanOpens: $humanOpens,
                     action: startGame
@@ -105,11 +107,11 @@ struct Connect4View: View {
             } else {
                 SetupCard(
                     kind: kind,
-                    firstLabel: "Red player",
-                    secondLabel: "Yellow player",
+                    firstLabel: String(localized: "Red player"),
+                    secondLabel: String(localized: "Yellow player"),
                     firstName: $redName,
                     secondName: $yellowName,
-                    blurb: "Red opens. Four in a line — any direction — takes it.",
+                    blurb: String(localized: "Red opens. Four in a line — any direction — takes it."),
                     action: startGame
                 )
                 .frame(maxHeight: .infinity)
@@ -265,15 +267,15 @@ struct Connect4View: View {
         var newGame = Connect4Game()
         if vsComputer {
             // Seat 0 opens and plays red, so going second means the computer sits first.
-            let you = Player(name: "You", role: humanOpens ? Disc.red : .yellow)
-            let computer = Player(name: "Computer", role: humanOpens ? Disc.yellow : .red)
+            let you = Player(name: String(localized: "You"), role: humanOpens ? Disc.red : .yellow)
+            let computer = Player(name: String(localized: "Computer"), role: humanOpens ? Disc.yellow : .red)
             for player in humanOpens ? [you, computer] : [computer, you] {
                 try? newGame.addPlayer(player)
             }
             computerID = computer.id
         } else {
-            try? newGame.addPlayer(Player(name: redName.isEmpty ? "Red" : redName, role: .red))
-            try? newGame.addPlayer(Player(name: yellowName.isEmpty ? "Yellow" : yellowName, role: .yellow))
+            try? newGame.addPlayer(Player(name: redName.isEmpty ? String(localized: "Red") : redName, role: .red))
+            try? newGame.addPlayer(Player(name: yellowName.isEmpty ? String(localized: "Yellow") : yellowName, role: .yellow))
             computerID = nil
         }
         localGame = newGame
@@ -292,7 +294,7 @@ struct Connect4View: View {
         guard !game.isOver, canMove, let turn = game.currentPlayerID else { return }
         guard let disc = game.player(id: turn)?.role else { return }
         guard let landingRow = game.landingRow(inColumn: column) else {
-            errorMessage = GameError.columnIsFull.localizedDescription
+            errorMessage = userMessage(for: GameError.columnIsFull)
             return
         }
 
@@ -319,7 +321,7 @@ struct Connect4View: View {
             errorMessage = nil
             animateDrop(column: column, row: landingRow, disc: disc, cell: cell)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -401,17 +403,19 @@ struct Connect4View: View {
 
     private var resultHeadline: String {
         switch game.result {
-        case .win(let id) where computerID != nil: id == computerID ? "Computer wins" : "You win"
-        case .win(let id): "\(game.player(id: id)?.name ?? "Someone") wins"
-        case .draw: "Board full"
+        case .win(let id) where computerID != nil:
+            id == computerID ? String(localized: "Computer wins") : String(localized: "You win")
+        case .win(let id):
+            String(localized: "\(game.player(id: id)?.name ?? String(localized: "Someone")) wins")
+        case .draw: String(localized: "Board full")
         case .ongoing: ""
         }
     }
 
     private var resultDetail: String {
         switch game.result {
-        case .win: "Four connected in \(game.turnHistory.count) moves."
-        case .draw: "All 42 sockets filled, nobody connected four."
+        case .win: String(localized: "Four connected in \(game.turnHistory.count) moves.")
+        case .draw: String(localized: "All 42 sockets filled, nobody connected four.")
         case .ongoing: ""
         }
     }
