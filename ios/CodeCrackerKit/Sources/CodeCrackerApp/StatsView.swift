@@ -105,10 +105,14 @@ struct StatsView: View {
     /// set than the number next to it — and off one or two games it says
     /// nothing anyway.
     private func summary(_ record: GameRecord) -> String {
-        guard record.played > 0 else { return "No games yet" }
-        let games = record.played == 1 ? "1 game" : "\(record.played) games"
+        guard record.played > 0 else { return String(localized: "No games yet") }
+        // Plural forms live in the string catalog.
+        let games = String(localized: "\(record.played) games")
         guard record.won + record.lost > 0 else { return games }
-        return "\(games) · \(record.won)W \(record.lost)L"
+        return String(
+            localized: "\(games) · \(record.won)W \(record.lost)L",
+            comment: "Game count, then wins and losses with one-letter suffixes"
+        )
     }
 
     /// A best run worth mentioning. One win is not a streak, so the badge only
@@ -156,7 +160,7 @@ struct StatsView: View {
                 // not the same achievement, and the store keys them apart.
                 return Difficulty.allCases.map { level in
                     Row(
-                        label: "\(mode.title) · \(level.rawValue.capitalized)",
+                        label: "\(mode.title) · \(level.title)",
                         record: stats.record(kind: kind, mode: mode, difficulty: level),
                         showsOutcome: true
                     )
@@ -174,10 +178,10 @@ struct StatsView: View {
             Spacer(minLength: 8)
 
             if row.showsOutcome {
-                tally("W", row.record.won, color: accent)
-                tally("L", row.record.lost, color: .textSecondary)
+                tally(String(localized: "W", comment: "Wins, as a one-letter column"), row.record.won, color: accent)
+                tally(String(localized: "L", comment: "Losses, as a one-letter column"), row.record.lost, color: .textSecondary)
                 if row.record.drawn > 0 {
-                    tally("D", row.record.drawn, color: .discYellow)
+                    tally(String(localized: "D", comment: "Draws, as a one-letter column"), row.record.drawn, color: .discYellow)
                 }
             } else {
                 // No winner to report, so say what the number means.
