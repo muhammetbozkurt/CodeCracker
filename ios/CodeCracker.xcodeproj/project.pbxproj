@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A2F5C0093E4471B8D6A000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A0009 /* Assets.xcassets */; };
 		1A2F5C0093E4471B8D6A000C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A000B /* PrivacyInfo.xcprivacy */; };
+		1A2F5C0093E4471B8D6A000E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A000D /* Localizable.xcstrings */; };
 		B5D47F892F8305A497CD7FB0 /* ComputerPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C8C024C3BEEC188D8233BB /* ComputerPlayer.swift */; };
 		6F36BB6B5AE31FA54B32AAAF /* Connect4Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9133D65C578DF45C11D999 /* Connect4Game.swift */; };
 		8E91FD4F7A0B87A6BC365E72 /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB9D1B72F62FDD77C54358C /* GameError.swift */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		1A2F5C0093E4471B8D6A0009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A2F5C0093E4471B8D6A000B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		1A2F5C0093E4471B8D6A000D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		F8ADA977F53FD5687BC63DFB /* CodeCracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeCracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0C8C024C3BEEC188D8233BB /* ComputerPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComputerPlayer.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/ComputerPlayer.swift; sourceTree = "<group>"; };
 		6E9133D65C578DF45C11D999 /* Connect4Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Connect4Game.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/Connect4Game.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				67DB4A58C8D4646E6AB1A8D8 /* CodeCrackerApp */,
 				1A2F5C0093E4471B8D6A0009 /* Assets.xcassets */,
 				1A2F5C0093E4471B8D6A000B /* PrivacyInfo.xcprivacy */,
+				1A2F5C0093E4471B8D6A000D /* Localizable.xcstrings */,
 				7E57BEEEE44EFD0E914D6BCB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -161,6 +164,12 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
+				de,
+				fr,
+				es,
+				"pt-BR",
+				it,
 			);
 			mainGroup = DC73C0488591F1EAF295E094;
 			productRefGroup = 7E57BEEEE44EFD0E914D6BCB /* Products */;
@@ -179,6 +188,7 @@
 			files = (
 				1A2F5C0093E4471B8D6A000A /* Assets.xcassets in Resources */,
 				1A2F5C0093E4471B8D6A000C /* PrivacyInfo.xcprivacy in Resources */,
+				1A2F5C0093E4471B8D6A000E /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
