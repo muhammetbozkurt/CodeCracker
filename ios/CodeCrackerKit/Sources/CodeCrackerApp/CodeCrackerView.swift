@@ -149,7 +149,7 @@ struct CodeCrackerView: View {
             Text("Code locked in")
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(.white)
-            Text("Waiting for \(session?.opponentName ?? "your opponent") to pick theirs.")
+            Text("Waiting for \(session?.opponentName ?? String(localized: "your opponent")) to pick theirs.")
                 .font(.system(.footnote, design: .rounded))
                 .foregroundStyle(Color.textSecondary)
                 .multilineTextAlignment(.center)
@@ -165,7 +165,7 @@ struct CodeCrackerView: View {
             GameThumbnail(kind: kind)
 
             VStack(spacing: 8) {
-                Text("CodeCracker")
+                Text(verbatim: "CodeCracker")
                     .font(.system(.title2, design: .rounded, weight: .bold))
                     .foregroundStyle(.white)
                 Text("You each hide a four-digit code with no repeated digits, then take turns guessing the other's.")
@@ -177,11 +177,11 @@ struct CodeCrackerView: View {
             legend
 
             VStack(spacing: 10) {
-                AppTextField(title: "Player 1", text: $firstName, accent: kind.accent)
-                AppTextField(title: "Player 2", text: $secondName, accent: kind.secondaryAccent)
+                AppTextField(title: String(localized: "Player 1"), text: $firstName, accent: kind.accent)
+                AppTextField(title: String(localized: "Player 2"), text: $secondName, accent: kind.secondaryAccent)
             }
 
-            PrimaryButton(title: "Continue", systemImage: "arrow.right", gradient: kind.gradient) {
+            PrimaryButton(title: String(localized: "Continue"), systemImage: "arrow.right", gradient: kind.gradient) {
                 beginSetup()
             }
         }
@@ -191,7 +191,9 @@ struct CodeCrackerView: View {
     private var soloSetup: some View {
         SoloSetupCard(
             kind: kind,
-            blurb: "You and the computer each hide a four-digit code with no repeated digits, then take turns guessing the other's.",
+            blurb: String(
+                localized: "You and the computer each hide a four-digit code with no repeated digits, then take turns guessing the other's."
+            ),
             difficulty: $difficulty,
             humanOpens: $humanOpens,
             action: beginSetup,
@@ -225,15 +227,16 @@ struct CodeCrackerView: View {
         if vsComputer {
             // Seat 0 opens, so going second means the computer sits first.
             let computer = PlayerID()
-            let names = humanOpens ? ["You", "Computer"] : ["Computer", "You"]
-            for name in names {
-                _ = try? newGame.addPlayer(named: name, id: name == "Computer" ? computer : PlayerID())
+            let you = (name: String(localized: "You"), id: PlayerID())
+            let them = (name: String(localized: "Computer"), id: computer)
+            for seat in humanOpens ? [you, them] : [them, you] {
+                _ = try? newGame.addPlayer(named: seat.name, id: seat.id)
             }
             try? newGame.setSecret(ComputerPlayer.secret(), for: computer)
             computerID = computer
         } else {
-            _ = try? newGame.addPlayer(named: firstName.isEmpty ? "Player 1" : firstName)
-            _ = try? newGame.addPlayer(named: secondName.isEmpty ? "Player 2" : secondName)
+            _ = try? newGame.addPlayer(named: firstName.isEmpty ? String(localized: "Player 1") : firstName)
+            _ = try? newGame.addPlayer(named: secondName.isEmpty ? String(localized: "Player 2") : secondName)
             computerID = nil
         }
         localGame = newGame
@@ -247,7 +250,7 @@ struct CodeCrackerView: View {
     // MARK: Hand over
 
     private func handoffCard(seat: Int) -> some View {
-        let name = game.players.indices.contains(seat) ? game.players[seat].name : "the next player"
+        let name = game.players.indices.contains(seat) ? game.players[seat].name : String(localized: "the next player")
 
         return VStack(spacing: 18) {
             Image(systemName: "hand.raised.fill")
@@ -265,7 +268,7 @@ struct CodeCrackerView: View {
                     .foregroundStyle(Color.textSecondary)
             }
 
-            PrimaryButton(title: "I'm \(name)", systemImage: "lock.open.fill", gradient: kind.gradient) {
+            PrimaryButton(title: String(localized: "I'm \(name)"), systemImage: "lock.open.fill", gradient: kind.gradient) {
                 entry = ""
                 errorMessage = nil
                 stage = .secret(seat: seat)
@@ -282,7 +285,7 @@ struct CodeCrackerView: View {
 
         return VStack(spacing: 18) {
             VStack(spacing: 6) {
-                Text(computerID != nil ? "Pick your code" : "\(name), pick your code")
+                Text(computerID != nil ? String(localized: "Pick your code") : String(localized: "\(name), pick your code"))
                     .font(.system(.title3, design: .rounded, weight: .bold))
                     .foregroundStyle(.white)
                 Text("Four digits, all different, no leading zero.")
@@ -297,7 +300,7 @@ struct CodeCrackerView: View {
             Keypad(
                 accent: kind.accent,
                 canSubmit: entry.count == SecretCode.length,
-                submitLabel: "Set code",
+                submitLabel: String(localized: "Set code"),
                 onDigit: append,
                 onDelete: deleteDigit,
                 onSubmit: { setSecret(seat: seat) }
@@ -314,7 +317,7 @@ struct CodeCrackerView: View {
                 entry = ""
                 errorMessage = nil
             } catch {
-                errorMessage = error.localizedDescription
+                errorMessage = userMessage(for: error)
             }
             return
         }
@@ -333,7 +336,7 @@ struct CodeCrackerView: View {
                 stage = .playing
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -347,7 +350,9 @@ struct CodeCrackerView: View {
                 NetworkTurnHint(
                     isMyTurn: canMove,
                     accent: kind.accent,
-                    waitingText: computerID != nil ? "Computer is thinking…" : "Waiting for your opponent"
+                    waitingText: computerID != nil
+                        ? String(localized: "Computer is thinking…")
+                        : String(localized: "Waiting for your opponent")
                 )
             }
 
@@ -357,7 +362,7 @@ struct CodeCrackerView: View {
                     Keypad(
                         accent: currentAccent,
                         canSubmit: entry.count == SecretCode.length && canMove,
-                        submitLabel: "Submit guess",
+                        submitLabel: String(localized: "Submit guess"),
                         onDigit: append,
                         onDelete: deleteDigit,
                         onSubmit: submitGuess
@@ -371,7 +376,7 @@ struct CodeCrackerView: View {
             historyCard
 
             if game.isOver {
-                SecondaryButton(title: "New game", systemImage: "arrow.counterclockwise") {
+                SecondaryButton(title: String(localized: "New game"), systemImage: "arrow.counterclockwise") {
                     reset()
                 }
             }
@@ -477,7 +482,7 @@ struct CodeCrackerView: View {
                 errorMessage = nil
                 historySeat = mySeat ?? historySeat
             } catch {
-                errorMessage = error.localizedDescription
+                errorMessage = userMessage(for: error)
             }
             return
         }
@@ -491,7 +496,7 @@ struct CodeCrackerView: View {
                 historySeat = seat
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -551,7 +556,7 @@ struct CodeCrackerView: View {
         do {
             try localGame.play(guess, by: computerID)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = userMessage(for: error)
         }
     }
 
@@ -598,10 +603,10 @@ struct CodeCrackerView: View {
 
     private var resultHeadline: String {
         if case .win(let id) = game.result, computerID != nil {
-            return id == computerID ? "Computer cracked it" : "You cracked it"
+            return id == computerID ? String(localized: "Computer cracked it") : String(localized: "You cracked it")
         }
         if case .win(let id) = game.result {
-            return "\(game.player(id: id)?.name ?? "Someone") cracked it"
+            return String(localized: "\(game.player(id: id)?.name ?? String(localized: "Someone")) cracked it")
         }
         return ""
     }
@@ -609,17 +614,20 @@ struct CodeCrackerView: View {
     private var resultDetail: String {
         guard case .win(let winner) = game.result else { return "" }
         let guesses = game.history(for: winner).count
-        var detail = "Code broken in \(guesses) guess\(guesses == 1 ? "" : "es")."
+        // Plural forms live in the string catalog.
+        var detail = String(localized: "Code broken in \(guesses) guesses.")
 
         if let computerID, winner == computerID, let code = game.player(id: computerID)?.role {
-            detail += " Its code was \(code)."
+            detail += " " + String(localized: "Its code was \(code.description).")
         }
 
         if let session {
             if session.opponentCheated {
-                detail += " Their reveal didn't match what they committed to — that code moved during the game."
+                detail += " " + String(
+                    localized: "Their reveal didn't match what they committed to — that code moved during the game."
+                )
             } else if let revealed = session.revealedOpponentCode {
-                detail += " Their code was \(revealed)."
+                detail += " " + String(localized: "Their code was \(revealed.description).")
             }
         }
 
