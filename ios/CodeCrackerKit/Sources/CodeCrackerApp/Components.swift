@@ -43,17 +43,17 @@ enum GameKind: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .ticTacToe: "Tic-Tac-Toe"
-        case .connect4: "Four in a Row"
+        case .ticTacToe: String(localized: "Tic-Tac-Toe")
+        case .connect4: String(localized: "Four in a Row")
         case .codeCracker: "CodeCracker"
         }
     }
 
     var tagline: String {
         switch self {
-        case .ticTacToe: "Three in a row"
-        case .connect4: "Drop discs, line up four"
-        case .codeCracker: "Crack the hidden code"
+        case .ticTacToe: String(localized: "Three in a row")
+        case .connect4: String(localized: "Drop discs, line up four")
+        case .codeCracker: String(localized: "Crack the hidden code")
         }
     }
 
@@ -390,6 +390,28 @@ struct ErrorLine: View {
     }
 }
 
+// MARK: - Error copy
+
+/// What to show when a move or setup step is rejected. The kit's own
+/// `errorDescription` stays English — it carries no resources — so the app
+/// owns the translated copy. Anything else is a system error, which arrives
+/// already localized.
+func userMessage(for error: any Error) -> String {
+    guard let error = error as? GameError else { return error.localizedDescription }
+    return switch error {
+    case .gameIsFull: String(localized: "Game is full")
+    case .gameIsAlreadyOver: String(localized: "Game is already over")
+    case .gameIsNotReady: String(localized: "Game is not ready to play")
+    case .notYourTurn: String(localized: "Not your turn")
+    case .unknownPlayer: String(localized: "Player not found in game")
+    case .invalidCode: String(localized: "Guess must be a 4 digit number and every digit must be different")
+    case .secretAlreadySet: String(localized: "Secret can only be set once")
+    case .cellOccupied: String(localized: "Invalid move. Cell may be occupied or out of bounds.")
+    case .moveOutOfBounds: String(localized: "Move is out of bounds")
+    case .columnIsFull: String(localized: "Invalid move. Column may be full or out of bounds.")
+    }
+}
+
 // MARK: - End of game
 
 /// The card that covers the board when somebody wins or the game draws.
@@ -429,7 +451,7 @@ struct WinOverlay: View {
 
                 VStack(spacing: 10) {
                     PrimaryButton(
-                        title: "Play again",
+                        title: String(localized: "Play again"),
                         systemImage: "arrow.counterclockwise",
                         gradient: LinearGradient(
                             colors: [accent, accent.opacity(0.7)],
@@ -839,12 +861,12 @@ struct NetworkTurnHint: View {
     let accent: Color
     /// Shown while the other side moves. Nearby games keep the default;
     /// against the computer the wait is its thinking time.
-    var waitingText = "Waiting for your opponent"
+    var waitingText = String(localized: "Waiting for your opponent")
 
     var body: some View {
         HStack(spacing: 7) {
             Image(systemName: isMyTurn ? "hand.tap.fill" : "hourglass")
-            Text(isMyTurn ? "Your move" : waitingText)
+            Text(isMyTurn ? String(localized: "Your move") : waitingText)
         }
         .font(.system(.footnote, design: .rounded, weight: .semibold))
         .foregroundStyle(isMyTurn ? accent : Color.textTertiary)
