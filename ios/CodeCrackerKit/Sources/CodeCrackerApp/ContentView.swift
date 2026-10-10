@@ -42,7 +42,7 @@ struct ContentView: View {
                 statsButton
             }
 
-            Text("CodeCracker")
+            Text(verbatim: "CodeCracker")
                 .font(.system(size: 42, weight: .heavy, design: .rounded))
                 .foregroundStyle(
                     LinearGradient(
@@ -183,25 +183,25 @@ enum PlayMode: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .passAndPlay: "Pass & play"
-        case .solo: "vs Computer"
-        case .nearby: "Nearby"
+        case .passAndPlay: String(localized: "Pass & play")
+        case .solo: String(localized: "vs Computer")
+        case .nearby: String(localized: "Nearby")
         }
     }
 
     var sectionLabel: String {
         switch self {
-        case .passAndPlay: "two players, one device"
-        case .solo: "one player, one device"
-        case .nearby: "two players, two devices"
+        case .passAndPlay: String(localized: "two players, one device")
+        case .solo: String(localized: "one player, one device")
+        case .nearby: String(localized: "two players, two devices")
         }
     }
 
     var blurb: String {
         switch self {
-        case .passAndPlay: "Pick a game, pass the device, settle it properly."
-        case .solo: "Pick a game and a difficulty, then take on the computer."
-        case .nearby: "Pick a game, then host or join from the device next to you."
+        case .passAndPlay: String(localized: "Pick a game, pass the device, settle it properly.")
+        case .solo: String(localized: "Pick a game and a difficulty, then take on the computer.")
+        case .nearby: String(localized: "Pick a game, then host or join from the device next to you.")
         }
     }
 
@@ -215,9 +215,9 @@ enum PlayMode: String, CaseIterable, Identifiable {
 
     var footerText: String {
         switch self {
-        case .passAndPlay: "No account, no server, no internet."
-        case .solo: "The computer plays on this device. No internet needed."
-        case .nearby: "Device to device. No account, no server, no internet."
+        case .passAndPlay: String(localized: "No account, no server, no internet.")
+        case .solo: String(localized: "The computer plays on this device. No internet needed.")
+        case .nearby: String(localized: "Device to device. No account, no server, no internet.")
         }
     }
 }
