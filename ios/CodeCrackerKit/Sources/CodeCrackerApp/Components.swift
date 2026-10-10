@@ -44,7 +44,7 @@ enum GameKind: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .ticTacToe: "Tic-Tac-Toe"
-        case .connect4: "Connect 4"
+        case .connect4: "Four in a Row"
         case .codeCracker: "CodeCracker"
         }
     }
@@ -52,7 +52,7 @@ enum GameKind: String, CaseIterable, Identifiable {
     var tagline: String {
         switch self {
         case .ticTacToe: "Three in a row"
-        case .connect4: "Drop discs, connect four"
+        case .connect4: "Drop discs, line up four"
         case .codeCracker: "Crack the hidden code"
         }
     }
