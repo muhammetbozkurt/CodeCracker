@@ -302,7 +302,10 @@ struct SectionLabel: View {
     let text: String
 
     var body: some View {
-        Text(text.uppercased())
+        // `textCase` follows the locale; `uppercased()` would turn Turkish
+        // "iki" into "IKI" instead of "İKİ".
+        Text(text)
+            .textCase(.uppercase)
             .font(.system(size: 11, weight: .bold, design: .rounded))
             .tracking(1.4)
             .foregroundStyle(Color.textTertiary)
