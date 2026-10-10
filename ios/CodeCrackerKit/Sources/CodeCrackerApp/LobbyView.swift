@@ -38,19 +38,19 @@ struct LobbyView: View {
     private var chooser: some View {
         VStack(spacing: 18) {
             VStack(alignment: .leading, spacing: 14) {
-                SectionLabel(text: "nearby multiplayer")
+                SectionLabel(text: String(localized: "nearby multiplayer"))
 
                 Text("Two devices, same room. One hosts, the other joins.")
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(Color.textSecondary)
 
-                AppTextField(title: "Your name", text: $name, accent: kind.accent)
+                AppTextField(title: String(localized: "Your name"), text: $name, accent: kind.accent)
 
-                PrimaryButton(title: "Host a game", systemImage: "antenna.radiowaves.left.and.right", gradient: kind.gradient) {
+                PrimaryButton(title: String(localized: "Host a game"), systemImage: "antenna.radiowaves.left.and.right", gradient: kind.gradient) {
                     session = MultiplayerSession(kind: kind, role: .host, localName: name)
                 }
 
-                SecondaryButton(title: "Join a game", systemImage: "magnifyingglass") {
+                SecondaryButton(title: String(localized: "Join a game"), systemImage: "magnifyingglass") {
                     session = MultiplayerSession(kind: kind, role: .guest, localName: name)
                 }
             }
@@ -92,7 +92,7 @@ struct LobbyView: View {
             .glassSurface(RoundedRectangle(cornerRadius: 30, style: .continuous), tint: kind.accent)
             .overlay(RoundedRectangle(cornerRadius: 30, style: .continuous).stroke(Color.hairline, lineWidth: 1))
 
-            SecondaryButton(title: "Cancel", systemImage: "xmark") {
+            SecondaryButton(title: String(localized: "Cancel"), systemImage: "xmark") {
                 session.leave()
                 self.session = nil
             }
@@ -109,13 +109,13 @@ struct LobbyView: View {
                 .controlSize(.large)
                 .tint(kind.accent)
 
-            Text(session.role == .host ? "Waiting for a player" : "Looking for nearby games")
+            Text(session.role == .host ? String(localized: "Waiting for a player") : String(localized: "Looking for nearby games"))
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(.white)
 
             Text(session.role == .host
-                 ? "Keep this screen open. Your opponent should tap Join on their device."
-                 : "Pick the host below once their game shows up.")
+                 ? String(localized: "Keep this screen open. Your opponent should tap Join on their device.")
+                 : String(localized: "Pick the host below once their game shows up."))
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(Color.textSecondary)
                 .multilineTextAlignment(.center)
@@ -145,11 +145,11 @@ struct LobbyView: View {
                 .foregroundStyle(Color.textSecondary)
                 .multilineTextAlignment(.center)
 
-            PrimaryButton(title: "Let them in", systemImage: "checkmark", gradient: kind.gradient) {
+            PrimaryButton(title: String(localized: "Let them in"), systemImage: "checkmark", gradient: kind.gradient) {
                 session.respond(to: peer, accept: true)
             }
 
-            SecondaryButton(title: "Decline", systemImage: "xmark") {
+            SecondaryButton(title: String(localized: "Decline"), systemImage: "xmark") {
                 session.respond(to: peer, accept: false)
             }
         }
@@ -206,7 +206,7 @@ struct LobbyView: View {
             .glassSurface(RoundedRectangle(cornerRadius: 30, style: .continuous), tint: kind.accent)
             .overlay(RoundedRectangle(cornerRadius: 30, style: .continuous).stroke(Color.hairline, lineWidth: 1))
 
-            PrimaryButton(title: "Back to lobby", systemImage: "arrow.counterclockwise", gradient: kind.gradient) {
+            PrimaryButton(title: String(localized: "Back to lobby"), systemImage: "arrow.counterclockwise", gradient: kind.gradient) {
                 session?.leave()
                 session = nil
             }
