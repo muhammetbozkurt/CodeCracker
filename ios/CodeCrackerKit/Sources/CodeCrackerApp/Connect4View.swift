@@ -415,7 +415,7 @@ struct Connect4View: View {
     private var resultDetail: String {
         switch game.result {
         case .win: String(localized: "Four connected in \(game.turnHistory.count) moves.")
-        case .draw: String(localized: "All 42 sockets filled, nobody connected four.")
+        case .draw: String(localized: "All 42 sockets filled, nobody lined up four.")
         case .ongoing: ""
         }
     }
