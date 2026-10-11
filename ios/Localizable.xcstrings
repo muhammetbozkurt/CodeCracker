@@ -1400,6 +1400,46 @@
         }
       }
     },
+    "Done" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fine"
+          }
+        }
+      }
+    },
     "Drop discs, line up four" : {
       "localizations" : {
         "tr" : {
@@ -1436,6 +1476,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allinea quattro pedine"
+          }
+        }
+      }
+    },
+    "Each player picks a secret code: four digits, all different, no leading zero." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her oyuncu gizli bir kod seçer: dört rakam, hepsi farklı, sıfırla başlamaz."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeder wählt einen geheimen Code: vier verschiedene Ziffern, keine führende Null."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaque joueur choisit un code secret : quatre chiffres, tous différents, sans zéro au début."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada jugador elige un código secreto: cuatro dígitos distintos, sin cero inicial."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada jogador escolhe um código secreto: quatro dígitos diferentes, sem zero à esquerda."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ogni giocatore sceglie un codice segreto: quattro cifre diverse, senza zero iniziale."
           }
         }
       }
@@ -1516,6 +1596,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tutte le partite contate finora verranno dimenticate. L'operazione è irreversibile."
+          }
+        }
+      }
+    },
+    "Example" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beispiel"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemple"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplo"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esempio"
           }
         }
       }
@@ -1918,6 +2038,46 @@
         }
       }
     },
+    "Get three in a row — across, down or corner to corner — to win." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yatay, dikey ya da çapraz üçü yan yana getiren kazanır."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wer drei in einer Reihe hat – waagerecht, senkrecht oder diagonal –, gewinnt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aligne trois marques — en ligne, en colonne ou en diagonale — pour gagner."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alinea tres — en horizontal, vertical o diagonal — para ganar."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faça três em linha — na horizontal, vertical ou diagonal — para vencer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metti tre segni in fila — in orizzontale, verticale o diagonale — per vincere."
+          }
+        }
+      }
+    },
     "Guest" : {
       "localizations" : {
         "tr" : {
@@ -2078,6 +2238,46 @@
         }
       }
     },
+    "How to play" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasıl oynanır"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So wird gespielt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règles du jeu"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo se juega"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como jogar"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Come si gioca"
+          }
+        }
+      }
+    },
     "I'm %@" : {
       "localizations" : {
         "tr" : {
@@ -2114,6 +2314,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sono %@"
+          }
+        }
+      }
+    },
+    "If all 42 spaces fill up with no line of four, it's a draw." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "42 yuvanın hepsi dolar ve kimse dört pulu yan yana getiremezse oyun berabere biter."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sind alle 42 Felder belegt und niemand hat vier in einer Reihe, endet es unentschieden."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si les 42 cases sont pleines sans alignement de quatre, c'est un match nul."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si las 42 casillas se llenan sin cuatro en línea, es empate."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se as 42 casas forem preenchidas sem quatro em linha, dá empate."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se tutte le 42 caselle si riempiono senza quattro in fila, è pareggio."
+          }
+        }
+      }
+    },
+    "If all nine squares fill up with no line, it's a draw." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokuz kare dolar ve kimse üçü yan yana getiremezse oyun berabere biter."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sind alle neun Felder belegt und niemand hat eine Reihe, endet es unentschieden."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si les neuf cases sont pleines sans alignement, c'est un match nul."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si las nueve casillas se llenan sin línea, es empate."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se as nove casas forem preenchidas sem linha, dá empate."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se tutte e nove le caselle si riempiono senza una fila, è pareggio."
           }
         }
       }
@@ -2395,6 +2675,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fai entrare"
+          }
+        }
+      }
+    },
+    "Line up four of your discs — across, down or diagonally — to win." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dört pulunu yatay, dikey ya da çapraz yan yana getiren kazanır."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wer vier eigene Steine in eine Reihe bringt – waagerecht, senkrecht oder diagonal –, gewinnt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aligne quatre de tes jetons — en ligne, en colonne ou en diagonale — pour gagner."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alinea cuatro de tus fichas — en horizontal, vertical o diagonal — para ganar."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alinhe quatro fichas suas — na horizontal, vertical ou diagonal — para vencer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allinea quattro pedine — in orizzontale, verticale o diagonale — per vincere."
           }
         }
       }
@@ -2915,6 +3235,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ancora niente"
+          }
+        }
+      }
+    },
+    "On two devices, your code never leaves your phone. It is checked when the game ends, so nobody can change theirs halfway through." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İki cihazda oynarken kodun telefonundan hiç çıkmaz. Oyun bitince kontrol edilir; böylece kimse kodunu oyun ortasında değiştiremez."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf zwei Geräten verlässt dein Code nie dein Handy. Er wird am Spielende geprüft, damit niemand seinen Code mittendrin ändern kann."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sur deux appareils, ton code ne quitte jamais ton téléphone. Il est vérifié en fin de partie, pour que personne ne puisse changer le sien en cours de route."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En dos dispositivos, tu código nunca sale de tu teléfono. Se comprueba al final de la partida, así nadie puede cambiar el suyo a mitad de juego."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em dois aparelhos, seu código nunca sai do seu celular. Ele é conferido no fim da partida, para que ninguém mude o seu no meio do jogo."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Su due dispositivi, il tuo codice non lascia mai il telefono. Viene verificato a fine partita, così nessuno può cambiare il proprio a metà gioco."
           }
         }
       }
@@ -4079,6 +4439,126 @@
         }
       }
     },
+    "Take turns dropping a disc into one of the seven columns. It falls to the lowest free space. Red goes first." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sırayla yedi sütundan birine pul atın; pul en alttaki boş yere düşer. Kırmızı başlar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werft abwechselnd einen Stein in eine der sieben Spalten. Er fällt auf das unterste freie Feld. Rot beginnt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À tour de rôle, lâchez un jeton dans l'une des sept colonnes. Il tombe dans la case libre la plus basse. Rouge commence."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por turnos, suelta una ficha en una de las siete columnas. Cae al hueco libre más bajo. Empieza rojo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em turnos, solte uma ficha em uma das sete colunas. Ela cai na casa livre mais baixa. Vermelho começa."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A turno, lasciate cadere una pedina in una delle sette colonne. Scende nella casella libera più bassa. Inizia il rosso."
+          }
+        }
+      }
+    },
+    "Take turns guessing your opponent's code. Every guess is answered with two counts:" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sırayla rakibinizin kodunu tahmin edin. Her tahmin iki sayıyla yanıtlanır:"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ratet abwechselnd den Code des anderen. Jeder Versuch wird mit zwei Zahlen beantwortet:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À tour de rôle, devinez le code de l'adversaire. Chaque essai reçoit deux nombres :"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por turnos, adivina el código de tu rival. Cada intento recibe dos números:"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em turnos, tente adivinhar o código do adversário. Cada palpite recebe dois números:"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A turno, indovinate il codice dell'avversario. Ogni tentativo riceve due numeri:"
+          }
+        }
+      }
+    },
+    "Take turns placing your mark on the 3×3 board. X always goes first." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3×3 tahtaya sırayla işaretinizi koyun. Her zaman X başlar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setzt abwechselnd euer Zeichen auf das 3×3-Brett. X beginnt immer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À tour de rôle, placez votre marque sur la grille 3×3. X commence toujours."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por turnos, coloca tu marca en el tablero de 3×3. Siempre empieza X."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em turnos, coloque sua marca no tabuleiro 3×3. X sempre começa."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A turno, mettete il vostro segno sulla griglia 3×3. Inizia sempre X."
+          }
+        }
+      }
+    },
     "The computer plays on this device. No internet needed." : {
       "localizations" : {
         "tr" : {
@@ -4115,6 +4595,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il computer gioca su questo dispositivo. Non serve internet."
+          }
+        }
+      }
+    },
+    "The counts never say which digits matched — working that out is the game. Crack the other code first to win." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sayılar hangi rakamların tuttuğunu söylemez; bunu çözmek oyunun ta kendisi. Rakibinin kodunu ilk kıran kazanır."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Zahlen verraten nie, welche Ziffern passen – genau das herauszufinden ist das Spiel. Wer zuerst den anderen Code knackt, gewinnt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les nombres ne disent jamais quels chiffres correspondent — c'est tout le jeu. Le premier à percer le code adverse gagne."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los números nunca dicen qué dígitos coinciden: averiguarlo es el juego. Gana quien descifre primero el código del otro."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os números nunca dizem quais dígitos bateram — descobrir isso é o jogo. Vence quem decifrar primeiro o código do outro."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I numeri non dicono mai quali cifre corrispondono: scoprirlo è il gioco. Vince chi decifra per primo il codice dell'altro."
           }
         }
       }
@@ -4195,6 +4715,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'altro giocatore"
+          }
+        }
+      }
+    },
+    "The secret code is %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizli kod: %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der geheime Code ist %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le code secret est %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código secreto es %@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O código secreto é %@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il codice segreto è %@."
           }
         }
       }
