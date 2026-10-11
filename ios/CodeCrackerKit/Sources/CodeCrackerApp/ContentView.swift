@@ -79,7 +79,7 @@ struct ContentView: View {
     }
 
     private var modePicker: some View {
-        Picker("How to play", selection: $mode) {
+        Picker("Play mode", selection: $mode) {
             ForEach(PlayMode.allCases) { mode in
                 Text(mode.title).tag(mode)
             }
