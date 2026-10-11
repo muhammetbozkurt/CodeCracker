@@ -21,6 +21,7 @@
 		FF12B8ADE8A7B35B9909ADB3 /* TurnBasedGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53547FC20CF2C1895BB9C2E /* TurnBasedGame.swift */; };
 		AF7BCF08C339A4196EAEFA0B /* CodeCrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77932AF3C86984D740CCAF86 /* CodeCrackerApp.swift */; };
 		2859DF2DDF332E5AC02CE025 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C246A9485B77469F46C5F1E /* ContentView.swift */; };
+		1A2F5C0093E4471B8D6A0010 /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F5C0093E4471B8D6A000F /* HowToPlayView.swift */; };
 		F03524C782E495549E072FE6 /* TicTacToeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F203DDBAE1121A3186C5607 /* TicTacToeView.swift */; };
 		29C175FEACEBDCBF948B0D85 /* Connect4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187E6A0F23B9F7A08AD13340 /* Connect4View.swift */; };
 		556193CD929DB8709E6E9DED /* CodeCrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D0A457B46B0918953094DC /* CodeCrackerView.swift */; };
@@ -49,6 +50,7 @@
 		C53547FC20CF2C1895BB9C2E /* TurnBasedGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TurnBasedGame.swift; path = CodeCrackerKit/Sources/CodeCrackerKit/TurnBasedGame.swift; sourceTree = "<group>"; };
 		77932AF3C86984D740CCAF86 /* CodeCrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeCrackerApp.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/CodeCrackerApp.swift; sourceTree = "<group>"; };
 		1C246A9485B77469F46C5F1E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/ContentView.swift; sourceTree = "<group>"; };
+		1A2F5C0093E4471B8D6A000F /* HowToPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HowToPlayView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/HowToPlayView.swift; sourceTree = "<group>"; };
 		2F203DDBAE1121A3186C5607 /* TicTacToeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicTacToeView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/TicTacToeView.swift; sourceTree = "<group>"; };
 		187E6A0F23B9F7A08AD13340 /* Connect4View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Connect4View.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/Connect4View.swift; sourceTree = "<group>"; };
 		31D0A457B46B0918953094DC /* CodeCrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeCrackerView.swift; path = CodeCrackerKit/Sources/CodeCrackerApp/CodeCrackerView.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 			children = (
 				77932AF3C86984D740CCAF86 /* CodeCrackerApp.swift */,
 				1C246A9485B77469F46C5F1E /* ContentView.swift */,
+				1A2F5C0093E4471B8D6A000F /* HowToPlayView.swift */,
 				2F203DDBAE1121A3186C5607 /* TicTacToeView.swift */,
 				187E6A0F23B9F7A08AD13340 /* Connect4View.swift */,
 				31D0A457B46B0918953094DC /* CodeCrackerView.swift */,
@@ -210,6 +213,7 @@
 				FF12B8ADE8A7B35B9909ADB3 /* TurnBasedGame.swift in Sources */,
 				AF7BCF08C339A4196EAEFA0B /* CodeCrackerApp.swift in Sources */,
 				2859DF2DDF332E5AC02CE025 /* ContentView.swift in Sources */,
+				1A2F5C0093E4471B8D6A0010 /* HowToPlayView.swift in Sources */,
 				F03524C782E495549E072FE6 /* TicTacToeView.swift in Sources */,
 				29C175FEACEBDCBF948B0D85 /* Connect4View.swift in Sources */,
 				556193CD929DB8709E6E9DED /* CodeCrackerView.swift in Sources */,
