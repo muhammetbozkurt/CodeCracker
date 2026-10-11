@@ -407,7 +407,7 @@ func userMessage(for error: any Error) -> String {
     case .gameIsNotReady: String(localized: "Game is not ready to play")
     case .notYourTurn: String(localized: "Not your turn")
     case .unknownPlayer: String(localized: "Player not found in game")
-    case .invalidCode: String(localized: "Guess must be a 4 digit number and every digit must be different")
+    case .invalidCode: String(localized: "Code must be a 4-digit number with no repeated digits")
     case .secretAlreadySet: String(localized: "Secret can only be set once")
     case .cellOccupied: String(localized: "Invalid move. Cell may be occupied or out of bounds.")
     case .moveOutOfBounds: String(localized: "Move is out of bounds")

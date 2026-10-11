@@ -839,6 +839,46 @@
         }
       }
     },
+    "Code must be a 4-digit number with no repeated digits" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod, rakamları birbirinden farklı 4 basamaklı bir sayı olmalı"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Code muss eine vierstellige Zahl mit lauter verschiedenen Ziffern sein"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le code doit être un nombre à 4 chiffres, tous différents"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código debe ser un número de 4 cifras, todas distintas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O código deve ser um número de 4 dígitos, todos diferentes"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il codice deve essere un numero di 4 cifre, tutte diverse"
+          }
+        }
+      }
+    },
     "Computer" : {
       "localizations" : {
         "tr" : {
@@ -1874,46 +1914,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La partita non è ancora pronta"
-          }
-        }
-      }
-    },
-    "Guess must be a 4 digit number and every digit must be different" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kod, rakamları birbirinden farklı 4 basamaklı bir sayı olmalı"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Code muss eine vierstellige Zahl mit lauter verschiedenen Ziffern sein"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le code doit être un nombre à 4 chiffres, tous différents"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El código debe ser un número de 4 cifras, todas distintas"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O código deve ser um número de 4 dígitos, todos diferentes"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Il codice deve essere un numero di 4 cifre, tutte diverse"
           }
         }
       }
