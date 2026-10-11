@@ -1,7 +1,1363 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-
+    "%@ cracked it" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kodu kırdı"
+          }
+        }
+      }
+    },
+    "%@ left the game." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ oyundan ayrıldı."
+          }
+        }
+      }
+    },
+    "%@ wants to join" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ katılmak istiyor"
+          }
+        }
+      }
+    },
+    "%@ wins" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kazandı"
+          }
+        }
+      }
+    },
+    "%@ · %lldW %lldL" : {
+      "comment" : "Game count, then wins and losses with one-letter suffixes",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %lldG %lldM"
+          }
+        }
+      }
+    },
+    "%@, pick your code" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, kodunu seç"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "shouldTranslate" : false
+    },
+    "%lld games" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld game"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld games"
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld oyun"
+          }
+        }
+      }
+    },
+    "%lld in the right place, %lld in the wrong place" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld doğru yerde, %lld yanlış yerde"
+          }
+        }
+      }
+    },
+    "%lld played" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld played"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld played"
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld oynandı"
+          }
+        }
+      }
+    },
+    "All 42 sockets filled, nobody lined up four." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "42 yuvanın hepsi doldu, kimse dört pulu yan yana getiremedi."
+          }
+        }
+      }
+    },
+    "Back to lobby" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lobiye dön"
+          }
+        }
+      }
+    },
+    "Board full" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahta doldu"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vazgeç"
+          }
+        }
+      }
+    },
+    "Code broken in %lld guesses." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Code broken in %lld guess."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Code broken in %lld guesses."
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod %lld tahminde kırıldı."
+          }
+        }
+      }
+    },
+    "Code locked in" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod kilitlendi"
+          }
+        }
+      }
+    },
+    "Computer" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayar"
+          }
+        }
+      }
+    },
+    "Computer cracked it" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayar kodu kırdı"
+          }
+        }
+      }
+    },
+    "Computer is thinking…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayar düşünüyor…"
+          }
+        }
+      }
+    },
+    "Computer wins" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayar kazandı"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam"
+          }
+        }
+      }
+    },
+    "Could not read a message from the other device." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer cihazdan gelen bir mesaj okunamadı."
+          }
+        }
+      }
+    },
+    "Couldn't join %@. They may have declined, or not answered in time." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ oyununa katılınamadı. Reddetmiş ya da zamanında yanıt vermemiş olabilir."
+          }
+        }
+      }
+    },
+    "Crack the hidden code" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizli kodu kır"
+          }
+        }
+      }
+    },
+    "D" : {
+      "comment" : "Draws, as a one-letter column",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        }
+      }
+    },
+    "Dead heat" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berabere"
+          }
+        }
+      }
+    },
+    "Decline" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reddet"
+          }
+        }
+      }
+    },
+    "Device to device. No account, no server, no internet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihazdan cihaza. Hesap yok, sunucu yok, internet yok."
+          }
+        }
+      }
+    },
+    "Difficulty" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zorluk"
+          }
+        }
+      }
+    },
+    "Drop discs, line up four" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pul at, dördünü diz"
+          }
+        }
+      }
+    },
+    "Easy" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolay"
+          }
+        }
+      }
+    },
+    "Every game counted so far is forgotten. This cannot be undone." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdiye kadar sayılan tüm oyunlar silinir. Bu işlem geri alınamaz."
+          }
+        }
+      }
+    },
+    "Finish a game and it shows up here — wins, losses and your best run, for every way you play." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir oyunu bitir, burada görünsün: her oyun şekli için galibiyetlerin, mağlubiyetlerin ve en iyi serin."
+          }
+        }
+      }
+    },
+    "Four connected in %lld moves." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Four connected in %lld move."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Four connected in %lld moves."
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld hamlede dört pul yan yana."
+          }
+        }
+      }
+    },
+    "Four digits, all different, no leading zero." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dört rakam, hepsi farklı, sıfırla başlamaz."
+          }
+        }
+      }
+    },
+    "Four in a Row" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dörtlü"
+          }
+        }
+      }
+    },
+    "Game ended" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun bitti"
+          }
+        }
+      }
+    },
+    "Game is already over" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun zaten bitti"
+          }
+        }
+      }
+    },
+    "Game is full" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun dolu"
+          }
+        }
+      }
+    },
+    "Game is not ready to play" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun henüz başlamaya hazır değil"
+          }
+        }
+      }
+    },
+    "Guess must be a 4 digit number and every digit must be different" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod, rakamları birbirinden farklı 4 basamaklı bir sayı olmalı"
+          }
+        }
+      }
+    },
+    "Guest" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misafir"
+          }
+        }
+      }
+    },
+    "Hard" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zor"
+          }
+        }
+      }
+    },
+    "Host" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ev sahibi"
+          }
+        }
+      }
+    },
+    "Host a game" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun kur"
+          }
+        }
+      }
+    },
+    "How to play" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasıl oynanacak"
+          }
+        }
+      }
+    },
+    "I'm %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben %@"
+          }
+        }
+      }
+    },
+    "Invalid move. Cell may be occupied or out of bounds." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçersiz hamle. Kare dolu ya da tahtanın dışında olabilir."
+          }
+        }
+      }
+    },
+    "Invalid move. Column may be full or out of bounds." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçersiz hamle. Sütun dolu ya da tahtanın dışında olabilir."
+          }
+        }
+      }
+    },
+    "Its code was %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayarın kodu: %@."
+          }
+        }
+      }
+    },
+    "Join a game" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuna katıl"
+          }
+        }
+      }
+    },
+    "Keep this screen open. Your opponent should tap Join on their device." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu ekranı açık tut. Rakibin kendi cihazında “Oyuna katıl”a dokunmalı."
+          }
+        }
+      }
+    },
+    "L" : {
+      "comment" : "Losses, as a one-letter column",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "M"
+          }
+        }
+      }
+    },
+    "Let them in" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kabul et"
+          }
+        }
+      }
+    },
+    "Looking for nearby games" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakındaki oyunlar aranıyor"
+          }
+        }
+      }
+    },
+    "Medium" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orta"
+          }
+        }
+      }
+    },
+    "Move is out of bounds" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hamle tahtanın dışında"
+          }
+        }
+      }
+    },
+    "Nearby" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakın cihaz"
+          }
+        }
+      }
+    },
+    "New game" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni oyun"
+          }
+        }
+      }
+    },
+    "Nine squares, no winner. Again?" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokuz kare, kazanan yok. Bir daha?"
+          }
+        }
+      }
+    },
+    "No account, no server, no internet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap yok, sunucu yok, internet yok."
+          }
+        }
+      }
+    },
+    "No games yet" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz oyun yok"
+          }
+        }
+      }
+    },
+    "No guesses yet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz tahmin yok."
+          }
+        }
+      }
+    },
+    "Nobody else should look at the next screen." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki ekrana başka kimse bakmasın."
+          }
+        }
+      }
+    },
+    "Not played yet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz oynanmadı."
+          }
+        }
+      }
+    },
+    "Not your turn" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıra sende değil"
+          }
+        }
+      }
+    },
+    "Nothing counted yet" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz kayıt yok"
+          }
+        }
+      }
+    },
+    "Only let them in if that is the person sitting next to you." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca yanında oturan kişiyse kabul et."
+          }
+        }
+      }
+    },
+    "Pass & play" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elden ele"
+          }
+        }
+      }
+    },
+    "Pass the device to %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihazı şimdi %@ alsın"
+          }
+        }
+      }
+    },
+    "Pick a game and a difficulty, then take on the computer." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir oyun ve zorluk seç, sonra bilgisayara meydan oku."
+          }
+        }
+      }
+    },
+    "Pick a game, pass the device, settle it properly." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir oyun seç, cihazı elden ele geçirin, hesabı adilce kapatın."
+          }
+        }
+      }
+    },
+    "Pick a game, then host or join from the device next to you." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir oyun seç, sonra yanındaki cihazla oyun kur ya da oyuna katıl."
+          }
+        }
+      }
+    },
+    "Pick the host below once their game shows up." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun aşağıda görününce ev sahibini seç."
+          }
+        }
+      }
+    },
+    "Pick your code" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kodunu seç"
+          }
+        }
+      }
+    },
+    "Play again" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tekrar oyna"
+          }
+        }
+      }
+    },
+    "Player 1" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuncu 1"
+          }
+        }
+      }
+    },
+    "Player 2" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuncu 2"
+          }
+        }
+      }
+    },
+    "Player O" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuncu O"
+          }
+        }
+      }
+    },
+    "Player X" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuncu X"
+          }
+        }
+      }
+    },
+    "Player not found in game" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuncu bu oyunda bulunamadı"
+          }
+        }
+      }
+    },
+    "Red" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kırmızı"
+          }
+        }
+      }
+    },
+    "Red opens. Four in a line — any direction — takes it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kırmızı başlar. Herhangi bir yönde dört pulu yan yana getiren kazanır."
+          }
+        }
+      }
+    },
+    "Red player" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kırmızı oyuncu"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıfırla"
+          }
+        }
+      }
+    },
+    "Reset all stats?" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm istatistikler sıfırlansın mı?"
+          }
+        }
+      }
+    },
+    "Review the board" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahtaya bak"
+          }
+        }
+      }
+    },
+    "Right digit, right place" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğru rakam, doğru yer"
+          }
+        }
+      }
+    },
+    "Right digit, wrong place" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğru rakam, yanlış yer"
+          }
+        }
+      }
+    },
+    "Secret can only be set once" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizli kod yalnızca bir kez belirlenebilir"
+          }
+        }
+      }
+    },
+    "Set code" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kodu belirle"
+          }
+        }
+      }
+    },
+    "Someone" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biri"
+          }
+        }
+      }
+    },
+    "Start game" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyunu başlat"
+          }
+        }
+      }
+    },
+    "Stats" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İstatistikler"
+          }
+        }
+      }
+    },
+    "Submit guess" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahmini gönder"
+          }
+        }
+      }
+    },
+    "The computer plays on this device. No internet needed." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayar bu cihazda oynar. İnternet gerekmez."
+          }
+        }
+      }
+    },
+    "The other device sent a message it had no right to send." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer cihaz, göndermeye yetkisi olmayan bir mesaj gönderdi."
+          }
+        }
+      }
+    },
+    "The other player" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer oyuncu"
+          }
+        }
+      }
+    },
+    "The two devices fell out of sync." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İki cihaz arasındaki eşleşme bozuldu."
+          }
+        }
+      }
+    },
+    "Their code was %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakibin kodu: %@."
+          }
+        }
+      }
+    },
+    "Their reveal didn't match what they committed to — that code moved during the game." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakibin açıkladığı kod, baştaki taahhüdüyle uyuşmadı — kod oyun sırasında değiştirilmiş."
+          }
+        }
+      }
+    },
+    "Three in a row" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üçü yan yana"
+          }
+        }
+      }
+    },
+    "Three in a row in %lld moves." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Three in a row in %lld move."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Three in a row in %lld moves."
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld hamlede üçü yan yana."
+          }
+        }
+      }
+    },
+    "Tic-Tac-Toe" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "XOX"
+          }
+        }
+      }
+    },
+    "Two devices, same room. One hosts, the other joins." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İki cihaz, aynı oda. Biri oyunu kurar, diğeri katılır."
+          }
+        }
+      }
+    },
+    "W" : {
+      "comment" : "Wins, as a one-letter column",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
+          }
+        }
+      }
+    },
+    "Waiting for %@ to pick theirs." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kendi kodunu seçiyor, bekleniyor."
+          }
+        }
+      }
+    },
+    "Waiting for a player" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuncu bekleniyor"
+          }
+        }
+      }
+    },
+    "Waiting for your opponent" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakibin bekleniyor"
+          }
+        }
+      }
+    },
+    "X opens. Three in a row — across, down or corner to corner — wins." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X başlar. Yatay, dikey ya da çapraz üçü yan yana getiren kazanır."
+          }
+        }
+      }
+    },
+    "Yellow" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarı"
+          }
+        }
+      }
+    },
+    "Yellow player" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarı oyuncu"
+          }
+        }
+      }
+    },
+    "You" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sen"
+          }
+        }
+      }
+    },
+    "You and the computer each hide a four-digit code with no repeated digits, then take turns guessing the other's." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sen ve bilgisayar, rakamları tekrarsız dört haneli birer kod saklarsınız; sonra sırayla birbirinizinkini tahmin edersiniz."
+          }
+        }
+      }
+    },
+    "You cracked it" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kodu kırdın"
+          }
+        }
+      }
+    },
+    "You each hide a four-digit code with no repeated digits, then take turns guessing the other's." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkiniz de rakamları tekrarsız dört haneli birer kod saklarsınız; sonra sırayla birbirinizinkini tahmin edersiniz."
+          }
+        }
+      }
+    },
+    "You go first" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk sen başla"
+          }
+        }
+      }
+    },
+    "You win" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kazandın"
+          }
+        }
+      }
+    },
+    "Your move" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıra sende"
+          }
+        }
+      }
+    },
+    "Your name" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adın"
+          }
+        }
+      }
+    },
+    "nearby multiplayer" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yakın cihazla çok oyunculu"
+          }
+        }
+      }
+    },
+    "one player, one device" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tek oyuncu, tek cihaz"
+          }
+        }
+      }
+    },
+    "the next player" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sıradaki oyuncu"
+          }
+        }
+      }
+    },
+    "two players, one device" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iki oyuncu, tek cihaz"
+          }
+        }
+      }
+    },
+    "two players, two devices" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iki oyuncu, iki cihaz"
+          }
+        }
+      }
+    },
+    "vs Computer" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayara karşı"
+          }
+        }
+      }
+    },
+    "your opponent" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rakibin"
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }
