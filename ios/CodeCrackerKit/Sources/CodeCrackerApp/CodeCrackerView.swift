@@ -83,7 +83,7 @@ struct CodeCrackerView: View {
     }
 
     var body: some View {
-        GameShell(kind: kind, scrolls: true) {
+        GameShell(kind: kind, scrolls: true, introducesRules: true) {
             VStack(spacing: 18) {
                 switch effectiveStage {
                 case .names:
