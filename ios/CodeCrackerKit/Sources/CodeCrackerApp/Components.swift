@@ -531,7 +531,12 @@ struct GameShell<Content: View>: View {
     /// Scrolling screens get their `ScrollView` from here, full width, so
     /// card shadows aren't clipped at the column's edges.
     var scrolls = false
+    /// Opens the rules on their own the first time this game is shown, once
+    /// per install. CodeCracker sets it; its feedback is the rule people miss.
+    var introducesRules = false
     @ViewBuilder let content: () -> Content
+
+    @State private var showingRules = false
 
     var body: some View {
         ZStack {
@@ -547,6 +552,29 @@ struct GameShell<Content: View>: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingRules = true
+                } label: {
+                    Image(systemName: "questionmark")
+                        .font(.system(size: 15, weight: .bold))
+                }
+                .accessibilityLabel("How to play")
+            }
+        }
+        .sheet(isPresented: $showingRules) {
+            HowToPlayView(kind: kind)
+        }
+        .onAppear(perform: introduceRulesIfNeeded)
+    }
+
+    private func introduceRulesIfNeeded() {
+        guard introducesRules else { return }
+        let key = "rulesSeen.\(kind.rawValue)"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        showingRules = true
     }
 
     private var column: some View {
