@@ -1,0 +1,1 @@
+Üç klasik düello tek uygulamada: rakibinin gizli şifresini çöz, üçünü diz ya da dördünü yan yana getir. Aynı cihazda, bilgisayara karşı ya da iki cihazla oyna.

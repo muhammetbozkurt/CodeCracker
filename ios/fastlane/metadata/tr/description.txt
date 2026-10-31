@@ -1,0 +1,24 @@
+Dört rakam. Hepsi farklı. Rakibin gizli bir şifre seçti — o seninkini çözmeden sen onunkini çözebilir misin?
+
+CodeCracker, iki kişilik bir mantık düellosu. Her tahmine iki sayıyla cevap verilir: kaç rakam doğru yerde, kaç rakam doğru ama yanlış yerde. Cevaplar hangi rakamın tuttuğunu asla söylemez — onu bulmak oyunun ta kendisi.
+
+TEK UYGULAMADA ÜÇ OYUN
+• CodeCracker — uygulamanın kalbindeki şifre çözme düellosu
+• XOX — klasik oyun, üçünü diz
+• Dörtlü — pulunu at, dördünü yan yana getir
+
+ÜÇ OYUN MODU
+• Elden ele — iki oyuncu tek cihazda
+• Bilgisayara karşı — kolay, orta ya da zor; zor seviyede bilgisayar CodeCracker'ı birkaç tahminde çözen bir algoritmayla oynar
+• Yakın cihaz — iki iPhone ya da iPad doğrudan birbirine bağlanır, internet gerekmez
+
+İKİ CİHAZDA ADİL OYUN
+Gizli şifren telefonundan hiç çıkmaz. Oyun başında her iki taraf şifresinin bir parmak izini kilitler, oyun bitince ikisi de kontrol edilir — kimse şifresini yarı yolda sessizce değiştiremez.
+
+AYRICA
+• Her oyun için galibiyet, mağlubiyet ve seri istatistikleri
+• Her oyun için örnekli "Nasıl oynanır" rehberi
+• Türkçe, İngilizce, Almanca, Fransızca, İspanyolca, Portekizce ve İtalyanca
+
+REKLAM YOK. TAKİP YOK. HESAP YOK.
+Bir kez satın al, her şey senin: uygulama içi satın alma yok, reklam yok, hiçbir veri toplanmaz. Tüm oyunlar internetsiz çalışır.

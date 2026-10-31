@@ -1,0 +1,1 @@
+Tre duelli classici in un'app: decifra il codice segreto dell'avversario, fai tris o allinea quattro pedine. Gioca in due, contro il computer o su due dispositivi.

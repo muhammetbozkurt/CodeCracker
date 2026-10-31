@@ -1,0 +1,24 @@
+Four digits. All different. Your rival has chosen a secret code — can you crack it before they crack yours?
+
+CodeCracker is a head-to-head logic game. Each guess is answered with two numbers: how many digits are in the right place, and how many are right but in the wrong place. The answers never say which digits matched — working that out is the game.
+
+THREE GAMES IN ONE
+• CodeCracker — the code-breaking duel at the heart of the app
+• Tic-Tac-Toe — the classic, three in a row
+• Four in a Row — drop your discs, line up four
+
+THREE WAYS TO PLAY
+• Pass & play — two players share one device
+• vs Computer — easy, medium or hard; on hard, the computer plays CodeCracker with a solver that rarely needs more than a handful of guesses
+• Nearby — two iPhones or iPads play device to device, no internet needed
+
+FAIR PLAY ON TWO DEVICES
+Your secret code never leaves your phone. Each side locks in a fingerprint of its code at the start, and both are checked when the game ends — so nobody can quietly change their code halfway through.
+
+ALSO
+• Win, loss and streak stats for every game
+• A how-to-play guide for each game, with a worked example
+• In English, Turkish, German, French, Spanish, Portuguese and Italian
+
+NO ADS. NO TRACKING. NO ACCOUNT.
+Buy once and everything is yours: no in-app purchases, no ads, no data collected. Every game works fully offline.

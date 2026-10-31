@@ -1,0 +1,24 @@
+Vier Ziffern. Alle verschieden. Dein Gegner hat einen Geheimcode gewählt — knackst du seinen, bevor er deinen knackt?
+
+CodeCracker ist ein Logikduell für zwei. Jeder Tipp wird mit zwei Zahlen beantwortet: wie viele Ziffern an der richtigen Stelle stehen und wie viele richtig, aber an der falschen Stelle sind. Welche Ziffern stimmen, verraten die Antworten nie — genau das herauszufinden ist das Spiel.
+
+DREI SPIELE IN EINEM
+• CodeCracker — das Code-Duell im Herzen der App
+• Tic-Tac-Toe — der Klassiker, drei in einer Reihe
+• Vier in einer Reihe — Scheiben einwerfen, vier verbinden
+
+DREI SPIELMODI
+• Weitergeben — zwei Spieler an einem Gerät
+• vs. Computer — leicht, mittel oder schwer; auf „schwer“ spielt der Computer CodeCracker mit einem Löser, der selten mehr als eine Handvoll Tipps braucht
+• In der Nähe — zwei iPhones oder iPads spielen direkt miteinander, ganz ohne Internet
+
+FAIR AUF ZWEI GERÄTEN
+Dein Geheimcode verlässt nie dein Gerät. Zu Beginn hinterlegt jede Seite einen Fingerabdruck ihres Codes, und am Ende werden beide geprüft — so kann niemand seinen Code heimlich ändern.
+
+AUSSERDEM
+• Siege, Niederlagen und Serien für jedes Spiel
+• Eine Spielanleitung mit Beispiel für jedes Spiel
+• Auf Deutsch, Englisch, Türkisch, Französisch, Spanisch, Portugiesisch und Italienisch
+
+KEINE WERBUNG. KEIN TRACKING. KEIN KONTO.
+Einmal kaufen, alles gehört dir: keine In-App-Käufe, keine Werbung, keine Datensammlung. Alle Spiele funktionieren komplett offline.

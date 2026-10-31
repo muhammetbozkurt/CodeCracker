@@ -1,0 +1,24 @@
+Quatre chiffres. Tous différents. Ton adversaire a choisi un code secret — sauras-tu le percer avant qu'il ne perce le tien ?
+
+CodeCracker est un duel de logique en face à face. Chaque essai reçoit deux nombres en réponse : combien de chiffres sont bien placés, et combien sont justes mais mal placés. Les réponses ne disent jamais lesquels — c'est à toi de le déduire.
+
+TROIS JEUX EN UN
+• CodeCracker — le duel de déchiffrage au cœur de l'app
+• Morpion — le grand classique, trois en ligne
+• Quatre en ligne — lâche tes jetons, aligne-en quatre
+
+TROIS FAÇONS DE JOUER
+• À deux — deux joueurs sur un seul appareil
+• Contre l'ordi — facile, moyen ou difficile ; en difficile, l'ordinateur joue à CodeCracker avec un solveur qui n'a besoin que d'une poignée d'essais
+• À proximité — deux iPhone ou iPad jouent en direct, sans Internet
+
+DU FAIR-PLAY SUR DEUX APPAREILS
+Ton code secret ne quitte jamais ton téléphone. Au départ, chaque camp verrouille une empreinte de son code, et les deux sont vérifiées à la fin — personne ne peut changer son code en douce.
+
+ET AUSSI
+• Victoires, défaites et séries pour chaque jeu
+• Une règle du jeu illustrée d'un exemple pour chaque jeu
+• En français, anglais, turc, allemand, espagnol, portugais et italien
+
+SANS PUB. SANS PISTAGE. SANS COMPTE.
+Un seul achat et tout est à toi : aucun achat intégré, aucune publicité, aucune donnée collectée. Tous les jeux fonctionnent hors ligne.

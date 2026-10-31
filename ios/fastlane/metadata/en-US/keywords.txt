@@ -1,0 +1,1 @@
+bulls and cows,number guess,logic,puzzle,tic tac toe,four in a row,two player,offline,brain,mind
