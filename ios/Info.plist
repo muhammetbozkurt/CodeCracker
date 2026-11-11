@@ -2,12 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>CodeCracker uses the local network to find nearby players and pass moves between devices.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_codecracker._tcp</string>
 		<string>_codecracker._udp</string>
 	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>CodeCracker uses the local network to find nearby players and pass moves between devices.</string>
 </dict>
 </plist>
